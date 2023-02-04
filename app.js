@@ -70,7 +70,15 @@ class ProductManager{
                 if(item.id!==id){
                     return item;
                 }else{
-                    item = {id: item.id, title: title, description: description, price: price, thumbnail: thumbnail, code: code, stock: stock}
+                    const producto_nuevo ={
+                        title: title ? title : item.title, 
+                        description: description ? description : item.description, 
+                        price: price ? price : item.price, 
+                        thumbnail: thumbnail ? thumbnail : item.thumbnail, 
+                        code: code ? code : item.code, 
+                        stock: stock ? stock : item.stock
+                    }
+                    item = {id: item.id, ...producto_nuevo}
                     return item;
                 }
     
@@ -121,11 +129,11 @@ async function main (){
     await productManager.addProduct("producto prueba", "Este es un producto prueba", 500 , "Sin imagen", "pepito",25);
     console.log(await productManager.getProductById(2));
     console.log("------------------------Update product-----------------------------------");
-    await productManager.updateProduct(2,{title: "pedro", description: "pedro", price: 1, thumbnail: "sin imagen", code:"pedro", stock:1})
+    await productManager.updateProduct(2,{title: "cambio titulo", description: "Cambio", price: 1, thumbnail: "sin imagen", code:"pedro", stock:1})
     console.log(await productManager.getProductById(2));
     console.log("------------------------Delete product-----------------------------------");
-    await productManager.deleteProduct(3);
-    console.log(await productManager.getProductById(1));
+    await productManager.deleteProduct(2);
+    console.log(await productManager.getProductById(2));
     console.log("------------------------Muestro productos-----------------------------------");
     console.log(await productManager.getProducts());
 }
