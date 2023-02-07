@@ -1,4 +1,6 @@
 const fs = require('fs');
+import express from 'express';
+
 class ProductManager{
     constructor() {
         this.products = [];
