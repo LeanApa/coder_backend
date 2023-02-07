@@ -1,6 +1,5 @@
 import fs from 'fs';
 
-
 class ProductManager{
     constructor() {
         this.products = [];
@@ -20,7 +19,7 @@ class ProductManager{
             const existeProducto = this.products.some((item)=>item.code === code)
             if (existeProducto) {
                 console.log("Error: el producto con el código ingresado ya existe");
-            } else if(code===null || code===""  || title === null || title === "" || description === null || description === "" || price === null || price === "" || thumbnail === null || thumbnail === "" || stock === null || stock === ""){
+            }else if(code===null || code===""  || title === null || title === "" || description === null || description === "" || price === null || price === "" || thumbnail === null || thumbnail === "" || stock === null || stock === ""){
                 console.log("Error: Faltan ingresar datos del producto");
             }else{
                 const id = ProductManager.id
@@ -141,3 +140,5 @@ async function main (){
 }
 
 main();
+
+export default ProductManager;

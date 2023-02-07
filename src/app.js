@@ -1,5 +1,7 @@
 import express, { urlencoded } from 'express';
+import ProductManager from './ProductManager';
 
+const productManager = new ProductManager(); 
 const app = express();
 
 app.listen(8080);
