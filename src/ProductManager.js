@@ -51,10 +51,11 @@ class ProductManager{
         try {
             const response = await fs.promises.readFile(this.path,'utf-8')
             const responseArray = JSON.parse(response);
+            console.log('Error en la ejecución', responseArray);
             if (responseArray.some((item)=> item.id === id)) {
                 return  responseArray.find((item) => item.id === id);
             } else {
-                return "Error: Not found";
+                return {Error: "Item Not found"};
             } 
         } catch (error) {
             console.log('Error en la ejecución', error)
@@ -115,9 +116,25 @@ class ProductManager{
     
 }
 
-async function main (){
+/* async function main (){
 
     const productManager = new ProductManager();
+    console.log("--------------------------Generando Productos---------------------------------");
+
+    await productManager.addProduct("producto prueba1", "Este es un producto prueba 1", 200, "Sin imagen", "abc123",25);
+    await productManager.addProduct("producto prueba2", "Este es un producto prueba 2", 300, "Sin imagen", "abc124",25);
+    await productManager.addProduct("producto prueba3", "Este es un producto prueba 3", 400, "Sin imagen", "abc125",25);
+    await productManager.addProduct("producto prueba4", "Este es un producto prueba 4", 500, "Sin imagen", "abc126",25);
+    await productManager.addProduct("producto prueba5", "Este es un producto prueba 5", 600, "Sin imagen", "abc127",25);
+    await productManager.addProduct("producto prueba6", "Este es un producto prueba 6", 700, "Sin imagen", "abc128",25);
+    await productManager.addProduct("producto prueba7", "Este es un producto prueba 7", 800, "Sin imagen", "abc129",25);
+    await productManager.addProduct("producto prueba8", "Este es un producto prueba 8", 900, "Sin imagen", "abc130",25);
+    await productManager.addProduct("producto prueba9", "Este es un producto prueba 9", 1000, "Sin imagen", "abc131",25);
+    await productManager.addProduct("producto prueba10", "Este es un producto prueba 10", 1100, "Sin imagen", "abc132",25);
+    
+    console.log(await productManager.getProducts()); 
+    
+    
     console.log("Elementos en el array (sin agregar): ", await productManager.getProducts());
     console.log("-----------------------------------------------------------");
     await productManager.addProduct("producto prueba", "Este es un producto prueba", 200, "Sin imagen", "abc123",25);
@@ -139,6 +156,6 @@ async function main (){
     console.log(await productManager.getProducts());
 }
 
-main();
+main(); */
 
 export default ProductManager;
