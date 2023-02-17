@@ -61,28 +61,6 @@ export default class CartManager{
             } else {
                 return {Error: "Cart Not found"};
             }    
-            
-
-          /*  
-            if (fs.existsSync(this.path)) {
-                const response = await fs.promises.readFile(this.path,'utf-8');
-                this.products = JSON.parse(response);
-                ProductManager.id = this.products[this.products.length-1].id + 1;
-            } 
-            
-            const existeProducto = this.products.some((item)=>item.code === code)
-            if (existeProducto) {
-                console.log("Error: el producto con el código ingresado ya existe");
-                return ("Error: el producto con el código ingresado ya existe")
-            }else if(code===null || code===""  || title === null || title === "" || description === null || description === "" || price === null || price === "" || thumbnails === null || thumbnails === "" || stock === null || stock === "" || category === null || category === ""){
-                console.log("Error: Faltan ingresar datos del producto");
-                return ("Error: Faltan ingresar datos del producto");
-            }else{
-                const id = ProductManager.id
-                this.products.push({  id , title, description, code, price, status, stock, category, thumbnails});
-                await fs.promises.writeFile(this.path, JSON.stringify(this.products));
-                return ({message: "Producto aniadido"});
-            }  */
         } catch (error) {
             console.log('Error en la ejecución', error);
             return ('Error en la ejecución', error);
