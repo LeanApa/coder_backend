@@ -29,7 +29,7 @@ export default class CartManager{
       
     }
     
-    addProduct = async (cid, pid, stock)=> {
+    addProduct = async (cid, pid, quantity)=> {
         try {
             let cartModificado = [];
             const response = await fs.promises.readFile(this.path,'utf-8')
@@ -44,13 +44,13 @@ export default class CartManager{
                             if (elem.id !== pid) {
                                return elem
                             } else {
-                                elem.stock += stock;
+                                elem.quantity += quantity;
                                 return elem;
                             }
                         })
                         return item;
                     }else{
-                        item.products.push({id: pid, stock})
+                        item.products.push({id: pid, quantity})
                         console.log(item)
                         return item;
                     }

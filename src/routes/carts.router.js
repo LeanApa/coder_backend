@@ -20,9 +20,9 @@ router.post('/', async (req,res)=>{
 
 router.post('/:cid/product/:pid', async (req,res)=>{
     const {cid, pid} = req.params;
-    const {stock} = req.body;
+    const {quantity} = req.body;
 
-    const respuesta = await cartManager.addProduct(+cid, +pid,+stock);
+    const respuesta = await cartManager.addProduct(+cid, +pid,+quantity);
     res.send(respuesta);
 });
 
