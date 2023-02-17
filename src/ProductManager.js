@@ -8,7 +8,7 @@ class ProductManager{
 
     static id = 0;
 
-    addProduct = async (title, description, price, thumbnail, code, stock)=> {
+    addProduct = async (title, description, code, price, status = true, stock, category, thumbnails)=> {
         try {
             if (fs.existsSync(this.path)) {
                 const response = await fs.promises.readFile(this.path,'utf-8');
@@ -19,15 +19,19 @@ class ProductManager{
             const existeProducto = this.products.some((item)=>item.code === code)
             if (existeProducto) {
                 console.log("Error: el producto con el código ingresado ya existe");
-            }else if(code===null || code===""  || title === null || title === "" || description === null || description === "" || price === null || price === "" || thumbnail === null || thumbnail === "" || stock === null || stock === ""){
+                return ("Error: el producto con el código ingresado ya existe")
+            }else if(code===null || code===""  || title === null || title === "" || description === null || description === "" || price === null || price === "" || thumbnails === null || thumbnails === "" || stock === null || stock === "" || category === null || category === ""){
                 console.log("Error: Faltan ingresar datos del producto");
+                return ("Error: Faltan ingresar datos del producto");
             }else{
                 const id = ProductManager.id
-                this.products.push({  id , title, description, price, thumbnail, code, stock});
+                this.products.push({  id , title, description, code, price, status, stock, category, thumbnails});
                 await fs.promises.writeFile(this.path, JSON.stringify(this.products));
+                return ({message: "Producto aniadido"});
             } 
         } catch (error) {
-            console.log('Error en la ejecución', error)
+            console.log('Error en la ejecución', error);
+            return ('Error en la ejecución', error);
         }
       
     }
@@ -60,13 +64,11 @@ class ProductManager{
         } catch (error) {
             console.log('Error en la ejecución', error)
         }
-        
-        
     }
 
     updateProduct = async(id, producto) =>{
         try {
-            const {title, description, price, thumbnail, code, stock} = producto;
+            const {title, description, code, price, status, stock, category, thumbnails} = producto;
             const arrayProductos = await this.getProducts();
             const arrayModificado = arrayProductos.map((item)=> {
                 if(item.id!==id){
@@ -74,11 +76,13 @@ class ProductManager{
                 }else{
                     const producto_nuevo ={
                         title: title ? title : item.title, 
-                        description: description ? description : item.description, 
-                        price: price ? price : item.price, 
-                        thumbnail: thumbnail ? thumbnail : item.thumbnail, 
+                        description: description ? description : item.description,
                         code: code ? code : item.code, 
-                        stock: stock ? stock : item.stock
+                        price: price ? price : item.price,
+                        status: status ? status : item.status,
+                        stock: stock ? stock : item.stock, 
+                        category: category ? category : item.category,
+                        thumbnails: thumbnails ? thumbnails : item.thumbnails, 
                     }
                     item = {id: item.id, ...producto_nuevo}
                     return item;
@@ -87,11 +91,10 @@ class ProductManager{
             });     
 
             await fs.promises.writeFile(this.path, JSON.stringify(arrayModificado));
+            return {Message: "Item updated"};
         } catch (error) {
             console.log('Error en la ejecución', error) 
-        }
-       
-
+        }       
 
     }
 
@@ -102,12 +105,15 @@ class ProductManager{
             if(arrayProductos.some((item)=>item.id===id)){
                 arrayProductosFiltrado =  arrayProductos.filter((item)=>item.id!==id);
                 await fs.promises.writeFile(this.path, JSON.stringify(arrayProductosFiltrado));
+                return("Producto eliminado");
             }else{
                 console.log("El producto que se quiere eliminar, no existe");
+                return("El producto que se quiere eliminar, no existe");
             }
             
         } catch (error) {
             console.log('Error en la ejecución', error)
+            return('Error en la ejecución', error);
         }    
         
     }
@@ -121,17 +127,17 @@ class ProductManager{
     const productManager = new ProductManager();
     console.log("--------------------------Generando Productos---------------------------------");
 
-    await productManager.addProduct("producto prueba1", "Este es un producto prueba 1", 200, "Sin imagen", "abc123",25);
-    await productManager.addProduct("producto prueba2", "Este es un producto prueba 2", 300, "Sin imagen", "abc124",25);
-    await productManager.addProduct("producto prueba3", "Este es un producto prueba 3", 400, "Sin imagen", "abc125",25);
-    await productManager.addProduct("producto prueba4", "Este es un producto prueba 4", 500, "Sin imagen", "abc126",25);
-    await productManager.addProduct("producto prueba5", "Este es un producto prueba 5", 600, "Sin imagen", "abc127",25);
-    await productManager.addProduct("producto prueba6", "Este es un producto prueba 6", 700, "Sin imagen", "abc128",25);
-    await productManager.addProduct("producto prueba7", "Este es un producto prueba 7", 800, "Sin imagen", "abc129",25);
-    await productManager.addProduct("producto prueba8", "Este es un producto prueba 8", 900, "Sin imagen", "abc130",25);
-    await productManager.addProduct("producto prueba9", "Este es un producto prueba 9", 1000, "Sin imagen", "abc131",25);
-    await productManager.addProduct("producto prueba10", "Este es un producto prueba 10", 1100, "Sin imagen", "abc132",25);
-    
+    await productManager.addProduct("producto prueba 1", "Este es un producto prueba 1", "abc1", 200, true,10,"remera","sin imagen");
+    await productManager.addProduct("producto prueba 2", "Este es un producto prueba 2", "abc2", 200, true,10,"remera","sin imagen");
+    await productManager.addProduct("producto prueba 3", "Este es un producto prueba 3", "abc3", 200, true,10,"remera","sin imagen");
+    await productManager.addProduct("producto prueba 4", "Este es un producto prueba 4", "abc4", 200, true,10,"remera","sin imagen");
+    await productManager.addProduct("producto prueba 5", "Este es un producto prueba 5", "abc5", 200, true,10,"remera","sin imagen");
+    await productManager.addProduct("producto prueba 6", "Este es un producto prueba 6", "abc6", 200, true,10,"remera","sin imagen");
+    await productManager.addProduct("producto prueba 7", "Este es un producto prueba 7", "abc7", 200, true,10,"remera","sin imagen");
+    await productManager.addProduct("producto prueba 8", "Este es un producto prueba 8", "abc8", 200, true,10,"remera","sin imagen");
+    await productManager.addProduct("producto prueba 9", "Este es un producto prueba 9", "abc9", 200, true,10,"remera","sin imagen");
+    await productManager.addProduct("producto prueba 10", "Este es un producto prueba 10", "abc10", 200, true,10,"remera","sin imagen");
+   
     console.log(await productManager.getProducts()); 
     
     
@@ -147,7 +153,7 @@ class ProductManager{
     await productManager.addProduct("producto prueba", "Este es un producto prueba", 500 , "Sin imagen", "pepito",25);
     console.log(await productManager.getProductById(2));
     console.log("------------------------Update product-----------------------------------");
-    await productManager.updateProduct(2,{title: "cambio titulo", description: "Cambio", price: 1, thumbnail: "sin imagen", code:"pedro", stock:1})
+    await productManager.updateProduct(2,{title: "cambio titulo", description: "Cambio", price: 1, thumbnails: "sin imagen", code:"pedro", stock:1})
     console.log(await productManager.getProductById(2));
     console.log("------------------------Delete product-----------------------------------");
     await productManager.deleteProduct(2);
