@@ -29,8 +29,41 @@ export default class CartManager{
       
     }
     
-    addProduct = async (title, description, code, price, status = true, stock, category, thumbnails)=> {
+    addProduct = async (cid, pid, stock)=> {
         try {
+            let cartModificado = [];
+            const response = await fs.promises.readFile(this.path,'utf-8')
+            const responseArray = JSON.parse(response);
+            console.log(typeof(pid));
+            if (responseArray.some((item)=> item.id === cid)) {
+                cartModificado = responseArray.map((item)=>{
+                    if (item.id !== cid) {
+                        return item;
+                    } else if (item.products.some((products)=> products.id === pid)) {
+                        item.products = item.products.map((elem)=>{
+                            if (elem.id !== pid) {
+                               return elem
+                            } else {
+                                elem.stock += stock;
+                                return elem;
+                            }
+                        })
+                        return item;
+                    }else{
+                        item.products.push({id: pid, stock})
+                        console.log(item)
+                        return item;
+                    }
+                })
+                await fs.promises.writeFile(this.path, JSON.stringify(cartModificado));
+                return cartModificado;
+                
+            } else {
+                return {Error: "Cart Not found"};
+            }    
+            
+
+          /*  
             if (fs.existsSync(this.path)) {
                 const response = await fs.promises.readFile(this.path,'utf-8');
                 this.products = JSON.parse(response);
@@ -49,7 +82,7 @@ export default class CartManager{
                 this.products.push({  id , title, description, code, price, status, stock, category, thumbnails});
                 await fs.promises.writeFile(this.path, JSON.stringify(this.products));
                 return ({message: "Producto aniadido"});
-            } 
+            }  */
         } catch (error) {
             console.log('Error en la ejecución', error);
             return ('Error en la ejecución', error);
@@ -57,28 +90,13 @@ export default class CartManager{
       
     }
 
-    getProducts = async ()=>{
-        try {
-            if (fs.existsSync(this.path)) {
-                const response = await fs.promises.readFile(this.path,'utf-8');
-                this.products = JSON.parse(response);
-                return JSON.parse(response);
-            }else{
-                return this.products;
-            }
-        } catch (error) {
-            console.log('Error en la ejecución', error)
-        }
-        
-    }
 
-    getProductById = async (id)=>{
+    getProductsByCartId = async (id)=>{
         try {
             const response = await fs.promises.readFile(this.path,'utf-8')
             const responseArray = JSON.parse(response);
-            console.log('Error en la ejecución', responseArray);
             if (responseArray.some((item)=> item.id === id)) {
-                return  responseArray.find((item) => item.id === id);
+                return  responseArray.find((item) => item.id === id).products;
             } else {
                 return {Error: "Item Not found"};
             } 
