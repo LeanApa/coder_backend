@@ -83,58 +83,6 @@ export default class CartManager{
         }
     }
 
-    updateProduct = async(id, producto) =>{
-        try {
-            const {title, description, code, price, status, stock, category, thumbnails} = producto;
-            const arrayProductos = await this.getProducts();
-            const arrayModificado = arrayProductos.map((item)=> {
-                if(item.id!==id){
-                    return item;
-                }else{
-                    const producto_nuevo ={
-                        title: title ? title : item.title, 
-                        description: description ? description : item.description,
-                        code: code ? code : item.code, 
-                        price: price ? price : item.price,
-                        status: status ? status : item.status,
-                        stock: stock ? stock : item.stock, 
-                        category: category ? category : item.category,
-                        thumbnails: thumbnails ? thumbnails : item.thumbnails, 
-                    }
-                    item = {id: item.id, ...producto_nuevo}
-                    return item;
-                }
-    
-            });     
-
-            await fs.promises.writeFile(this.path, JSON.stringify(arrayModificado));
-            return {Message: "Item updated"};
-        } catch (error) {
-            console.log('Error en la ejecución', error) 
-        }       
-
-    }
-
-    deleteProduct = async(id) =>{
-        try {
-            let arrayProductosFiltrado = [];
-            const arrayProductos = await this.getProducts();
-            if(arrayProductos.some((item)=>item.id===id)){
-                arrayProductosFiltrado =  arrayProductos.filter((item)=>item.id!==id);
-                await fs.promises.writeFile(this.path, JSON.stringify(arrayProductosFiltrado));
-                return("Producto eliminado");
-            }else{
-                console.log("El producto que se quiere eliminar, no existe");
-                return("El producto que se quiere eliminar, no existe");
-            }
-            
-        } catch (error) {
-            console.log('Error en la ejecución', error)
-            return('Error en la ejecución', error);
-        }    
-        
-    }
-
 
     
 }
