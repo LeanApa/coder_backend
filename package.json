@@ -20,7 +20,8 @@
   "type": "module",
   "homepage": "https://github.com/LeanApa/coder_backend#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "express-handlebars": "^6.0.7"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
