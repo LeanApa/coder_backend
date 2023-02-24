@@ -14,7 +14,7 @@ export const cartManager = new CartManager();
 const BASE_PREFIX = "/api";
 const app = express();
 const httpServer = app.listen(8080, ()=>console.log("Listening on port 8080"));
-const socketServer = new Server(httpServer);
+export const socketServer = new Server(httpServer);
 
 
 app.use(express.json());
@@ -29,7 +29,7 @@ app.use(`${BASE_PREFIX}/products`, productsRoutes);
 app.use(`${BASE_PREFIX}/carts`, cartsRoutes);
 app.use('/', viewRoutes);
 
-socketServer.on('connection', socket=>{
+socketServer.on('connection', ()=>{
     console.log("nuevo cliente conectado");
 })
 
