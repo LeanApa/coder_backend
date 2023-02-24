@@ -30,7 +30,7 @@ router.post('/', async (req,res)=>{
 
 router.put('/:pid', async (req, res)=>{
     const {pid} = req.params;
-    const {title, description, code, price, status, stock = true, category,thumbnails} = req.body;
+    const {title, description, code, price, status = true, stock, category,thumbnails} = req.body;
     const respuesta = await productManager.updateProduct(+pid,{title,description,code,price,status,stock,category,thumbnails});
     res.send(respuesta);
 })
