@@ -1,12 +1,13 @@
 import express from 'express';
 import handlebars from 'express-handlebars';
 import __dirname from './utils.js';
-import ProductManager from './ProductManager.js';
-import CartManager from './dao/fileSystemManagers/CartManager.js'
-import productsRoutes from './routes/products.router.js'
-import cartsRoutes from './routes/carts.router.js'
-import viewRoutes from './routes/views.router.js'
-import {Server} from 'socket.io'
+import ProductManager from './dao/managers/ProductManager.js';
+import CartManager from './dao/managers/CartManager.js';
+import productsRoutes from './routes/products.router.js';
+import cartsRoutes from './routes/carts.router.js';
+import viewRoutes from './routes/views.router.js';
+import {Server} from 'socket.io';
+import mongoose from 'mongoose';
 
 export const productManager = new ProductManager();
 export const cartManager = new CartManager(); 
@@ -15,12 +16,8 @@ const BASE_PREFIX = "/api";
 const app = express();
 const httpServer = app.listen(8080, ()=>console.log("Listening on port 8080"));
 export const socketServer = new Server(httpServer);
-mongoose.connect('mongodb+srv://leaapagro:<1234>@ecommerce.h9vznv2.mongodb.net/?retryWrites=true&w=majority',(error)=>{
-    if (error) {
-        console.log("Cannot connect to database: ", error);
-        process.exit();
-    }
-});
+mongoose.connect('mongodb+srv://leaapagro:1234@ecommerce.h9vznv2.mongodb.net/?retryWrites=true&w=majority');
+
 
 
 app.use(express.json());
