@@ -2,7 +2,7 @@ import express from 'express';
 import handlebars from 'express-handlebars';
 import __dirname from './utils.js';
 import ProductManager from './ProductManager.js';
-import CartManager from './CartManager.js'
+import CartManager from './dao/fileSystemManagers/CartManager.js'
 import productsRoutes from './routes/products.router.js'
 import cartsRoutes from './routes/carts.router.js'
 import viewRoutes from './routes/views.router.js'
