@@ -7,15 +7,15 @@ const router = Router();
 router.get('/', async (req,res)=>{
     let {limit,page,query,sort} = req.query;
     const queryABuscar = {
-        stock: query === 'true' || query === 'false' ? query : null,
-        category: query !== 'true' && query !== 'false' && query!==undefined ? query : null 
+        stock: (query === 'true' || query === 'false') && query ? query : null,
+        category: query !== 'true' && query !== 'false' && query ? query : null 
     };
     console.log("La queryABuscar es: ", queryABuscar);
     const products = await productManager.getProducts(limit,page,queryABuscar,sort);
 
     const {hasNextPage, hasPrevPage, nextPage} = products;
-    const nextLink = hasNextPage ? `http://localhost:8080/api/products/?page=${nextPage}&limit=${limit}&query=${query}&sort=${sort}` : null;
-    const prevLink = hasPrevPage ? `http://localhost:8080/api/products/?page=${products.page-1}&limit=${limit}&query=${query}&sort=${sort}` : null;
+    const nextLink = hasNextPage ? `http://localhost:8080/api/products/?page=${nextPage}` : null;
+    const prevLink = hasPrevPage ? `http://localhost:8080/api/products/?page=${products.page-1}` : null;
 
     res.send({status: "success", payload: products, prevLink, nextLink});
       
