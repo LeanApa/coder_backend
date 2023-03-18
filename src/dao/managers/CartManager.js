@@ -1,3 +1,4 @@
+import { pid } from "process";
 import { cartsModel } from "../models/carts.model.js";
 
 
@@ -56,6 +57,18 @@ export default class CartManager{
                 return({messaage:"No se encontró el carrito"});
             }
             return(carritoEncontrado.products);
+        } catch (error) {
+            console.log('Error en la ejecución', error)
+        }
+    }
+
+    deleteProductByProductId = async (cid,pid)=>{
+        try {
+            let carritoEncontrado = await cartsModel.findById({_id: cid}).lean();
+            const newProductsArray = carritoEncontrado.products.filter((elem)=> elem._id !== pid);
+            carritoEncontrado.products = newProductsArray;
+            await cartsModel.findByIdAndUpdate({_id:cid}, {_id:cid, ...carritoEncontrado});
+            return {messaage: "Producto eliminado"};
         } catch (error) {
             console.log('Error en la ejecución', error)
         }
