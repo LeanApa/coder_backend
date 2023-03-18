@@ -31,10 +31,31 @@ export default class ProductManager{
       
     }
 
-    getProducts = async ()=>{
+    getProducts = async (limit=10,page=1,query,sort)=>{
         try {
-            const products = await productModel.find({}).lean();
-            return products;
+            const {stock, category} = query;
+            let products;
+            console.log("stock: ", stock, "category: ", category, " sort: ", sort);
+            
+            if (stock === null && category === null) {
+                products = sort ? await productModel.paginate({}, {limit: limit, page: page, sort: {price: sort}}): await productModel.paginate({}, {limit: limit, page: page});
+            }else if (stock === 'true') {
+                // busco por stock 
+                products = sort ? await productModel.paginate({ stock: { $gt: 0 } }, {limit: limit, page: page, sort: {price: sort}}) : await productModel.paginate({ stock: { $gt: 0 } }, {limit: limit, page: page});
+            } else if (category) {
+                //busco por categoría
+                products = sort ? await productModel.paginate({ category: category }, {limit: limit, page: page, sort: {price: sort}}) : await productModel.paginate({ category: category }, {limit: limit, page: page, sort: {price: sort}});
+            } else{
+                products = sort ? await productModel.paginate({ stock: 0 }, {limit: limit, page: page, sort: {price: sort}}) : await productModel.paginate({ stock: 0 }, {limit: limit, page: page});
+            }
+            
+            
+            //busco por categoría
+            
+            
+            
+            return products;  
+
         } catch (error) {
             console.log('Error en la ejecución', error)
         }

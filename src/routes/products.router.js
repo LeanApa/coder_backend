@@ -5,14 +5,20 @@ import {socketServer} from '../app.js'
 const router = Router();
 
 router.get('/', async (req,res)=>{
-    const {limit} = req.query;
-    const products = await productManager.getProducts();
-    if (limit !== null) {
-        const productsFiltered = products.slice(0,limit);
-        res.send(productsFiltered);
-    }else{
-        res.send(products);
-    }    
+    let {limit,page,query,sort} = req.query;
+    const queryABuscar = {
+        stock: query === 'true' || query === 'false' ? query : null,
+        category: query !== 'true' && query !== 'false' && query!==undefined ? query : null 
+    };
+    console.log("La queryABuscar es: ", queryABuscar);
+    const products = await productManager.getProducts(limit,page,queryABuscar,sort);
+
+    const {hasNextPage, hasPrevPage, nextPage} = products;
+    const nextLink = hasNextPage ? `http://localhost:8080/api/products/?page=${nextPage}&limit=${limit}&query=${query}&sort=${sort}` : null;
+    const prevLink = hasPrevPage ? `http://localhost:8080/api/products/?page=${products.page-1}&limit=${limit}&query=${query}&sort=${sort}` : null;
+
+    res.send({status: "success", payload: products, prevLink, nextLink});
+      
 })
 
 router.get('/:pid', async (req, res)=>{
