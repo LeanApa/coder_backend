@@ -38,22 +38,16 @@ export default class ProductManager{
             console.log("stock: ", stock, "category: ", category, " sort: ", sort);
             
             if (stock === null && category === null) {
-                products = sort ? await productModel.paginate({}, {limit: limit, page: page, sort: {price: sort}}): await productModel.paginate({}, {limit: limit, page: page});
+                products = sort ? await productModel.paginate({}, {limit: limit, page: page, sort: {price: sort},lean:true}): await productModel.paginate({}, {limit: limit, page: page,lean:true});
             }else if (stock === 'true') {
                 // busco por stock 
-                products = sort ? await productModel.paginate({ stock: { $gt: 0 } }, {limit: limit, page: page, sort: {price: sort}}) : await productModel.paginate({ stock: { $gt: 0 } }, {limit: limit, page: page});
+                products = sort ? await productModel.paginate({ stock: { $gt: 0 } }, {limit: limit, page: page, sort: {price: sort},lean:true}) : await productModel.paginate({ stock: { $gt: 0 } }, {limit: limit, page: page,lean:true});
             } else if (category) {
                 //busco por categoría
-                products = sort ? await productModel.paginate({ category: category }, {limit: limit, page: page, sort: {price: sort}}) : await productModel.paginate({ category: category }, {limit: limit, page: page, sort: {price: sort}});
+                products = sort ? await productModel.paginate({ category: category }, {limit: limit, page: page, sort: {price: sort},lean:true}) : await productModel.paginate({ category: category }, {limit: limit, page: page,lean:true});
             } else{
-                products = sort ? await productModel.paginate({ stock: 0 }, {limit: limit, page: page, sort: {price: sort}}) : await productModel.paginate({ stock: 0 }, {limit: limit, page: page});
-            }
-            
-            
-            //busco por categoría
-            
-            
-            
+                products = sort ? await productModel.paginate({ stock: 0 }, {limit: limit, page: page, sort: {price: sort},lean:true}) : await productModel.paginate({ stock: 0 }, {limit: limit, page: page,lean:true});
+            }  
             return products;  
 
         } catch (error) {
