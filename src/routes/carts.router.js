@@ -4,6 +4,11 @@ import { cartManager } from "../app.js";
 
 const router = Router();
 
+router.get('/', async (req,res)=>{
+    const carts = await cartManager.getCarts();
+    res.send(carts); 
+})
+
 router.get('/:cid', async (req, res)=>{
     const {cid} = req.params;
     console.log(req.params);

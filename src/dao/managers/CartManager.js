@@ -50,6 +50,16 @@ export default class CartManager{
       
     }
 
+    getCarts = async ()=>{
+        try {
+            const carts = cartsModel.find({}).lean();
+            return carts;
+        } catch (error) {
+            console.log('Error en la ejecución', error);
+        }
+        
+    }
+
 
     getProductsByCartId = async (cid)=>{
         try {

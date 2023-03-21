@@ -7,7 +7,7 @@ const router = Router();
 router.get('/', async (req,res)=>{
     let {limit,page,query,sort} = req.query;
     const queryABuscar = {
-        stock: (query === 'true' || query === 'false') && query ? query : null,
+        stock: query === 'true' || query === 'false' && query ? query : null,
         category: query !== 'true' && query !== 'false' && query ? query : null 
     };
     console.log("La queryABuscar es: ", queryABuscar);
