@@ -9,6 +9,10 @@ import viewRoutes from './routes/views.router.js';
 import {Server} from 'socket.io';
 import mongoose from 'mongoose';
 import MessagesManager from './dao/managers/MessageManager.js';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
+import sessionRoutes from './routes/session.router.js';
 
 export const productManager = new ProductManager();
 export const cartManager = new CartManager(); 
@@ -24,6 +28,17 @@ mongoose.connect('mongodb+srv://leaapagro:1234@ecommerce.h9vznv2.mongodb.net/?re
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+app.use(cookieParser());
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl:"mongodb+srv://leaapagro:1234@ecommerce.h9vznv2.mongodb.net/?retryWrites=true&w=majority",
+        mongoOptions:{useNewUrlParser: true, useUnifiedTopology:true},
+        ttl:60*3600
+    }),
+    secret:"s3cr3tPassw0rd",
+    resave:false,
+    saveUninitialized:false
+}));
 
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname+'/views');
@@ -33,6 +48,7 @@ app.use(express.static(__dirname+'/public'));
 app.use(`${BASE_PREFIX}/products`, productsRoutes);
 app.use(`${BASE_PREFIX}/carts`, cartsRoutes);
 app.use('/', viewRoutes);
+app.use(`${BASE_PREFIX}/sessions`, sessionRoutes)
 
 socketServer.on('connection', (socket)=>{
     console.log("nuevo cliente conectado");
