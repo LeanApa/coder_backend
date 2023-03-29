@@ -1,4 +1,6 @@
+import { getRounds } from "bcrypt";
 import { Router } from "express";
+import  passport  from "passport";
 import { userModel } from "../dao/models/users.model.js";
 
 const router = Router();
@@ -12,7 +14,7 @@ router.get("/logout", async (req, res)=>{
     })
 });
 
-router.post("/login", async(req,res)=>{
+/* router.post("/login", async(req,res)=>{
     try {
         const {email, password} = req.body;
         if (email === 'adminCoder@coder.com' && password === 'adminCod3r123') {
@@ -46,9 +48,9 @@ router.post("/login", async(req,res)=>{
     } catch (error) {
         console.log("Error al hacer login", error)
     }
-});
+}); */
 
-router.post("/register", async (req, res) => {
+/* router.post("/register", async (req, res) => {
     try {
       const { first_name, last_name, email, age, password } = req.body;
   
@@ -60,6 +62,32 @@ router.post("/register", async (req, res) => {
     } catch (error) {
       console.log("Error al registrar usuario: ", error);
     }
+  }); */
+
+  router.post('/login', passport.authenticate('login',{failureRedirect:'/faillogin'}),async (req,res)=>{
+    if (!req.user) {
+        return res.status(400).send({status:"error", error:"invalid credentials"})
+    }
+    req.session.user = {
+        first_name : req.user.first_name,
+        last_name : req.user.last_name,
+        age : req.user.age,
+        email : req.user.email
+    }
+    res.redirect("/products")
+  });
+
+  router.get('/faillogin', (req,res)=>{
+    res.send({error:"Failed Login"});
+  });
+
+  router.post('/register', passport.authenticate('register',{failureRedirect:'/failregister'}), async (req,res)=>{
+    res.redirect("/login")
+  });
+
+  router.get('/failregister', async(req,res)=>{
+    console.log("Failed Strategy");
+    res.send({error: "Failed"});
   });
 
   export default router;

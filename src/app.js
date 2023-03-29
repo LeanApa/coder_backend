@@ -13,6 +13,8 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import sessionRoutes from './routes/session.router.js';
+import passport from 'passport';
+import initializePassport from './config/passport.config.js';
 
 export const productManager = new ProductManager();
 export const cartManager = new CartManager(); 
@@ -39,6 +41,9 @@ app.use(session({
     resave:false,
     saveUninitialized:false
 }));
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname+'/views');
