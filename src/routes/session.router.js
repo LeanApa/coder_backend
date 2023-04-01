@@ -14,7 +14,44 @@ router.get("/logout", async (req, res)=>{
     })
 });
 
-/* router.post("/login", async(req,res)=>{
+router.get('/github', passport.authenticate('github',{scope:['user:email']}), async(req,res)=>{});
+
+router.get('/githubcallback', passport.authenticate('github', {failureRedirect:'/login'}),async(req,res)=>{
+    req.session.user = req.user;
+    res.redirect('/products');
+})
+
+router.post('/login', passport.authenticate('login',{failureRedirect:'/faillogin'}),async (req,res)=>{
+if (!req.user) {
+    return res.status(400).send({status:"error", error:"invalid credentials"})
+}
+req.session.user = {
+    first_name : req.user.first_name,
+    last_name : req.user.last_name,
+    age : req.user.age,
+    email : req.user.email
+}
+res.redirect("/products")
+});
+
+router.get('/faillogin', (req,res)=>{
+res.send({error:"Failed Login"});
+});
+
+router.post('/register', passport.authenticate('register',{failureRedirect:'/failregister'}), async (req,res)=>{
+res.redirect("/login")
+});
+
+router.get('/failregister', async(req,res)=>{
+console.log("Failed Strategy");
+res.send({error: "Failed"});
+});
+
+export default router;
+
+
+
+  /* router.post("/login", async(req,res)=>{
     try {
         const {email, password} = req.body;
         if (email === 'adminCoder@coder.com' && password === 'adminCod3r123') {
@@ -63,31 +100,3 @@ router.get("/logout", async (req, res)=>{
       console.log("Error al registrar usuario: ", error);
     }
   }); */
-
-  router.post('/login', passport.authenticate('login',{failureRedirect:'/faillogin'}),async (req,res)=>{
-    if (!req.user) {
-        return res.status(400).send({status:"error", error:"invalid credentials"})
-    }
-    req.session.user = {
-        first_name : req.user.first_name,
-        last_name : req.user.last_name,
-        age : req.user.age,
-        email : req.user.email
-    }
-    res.redirect("/products")
-  });
-
-  router.get('/faillogin', (req,res)=>{
-    res.send({error:"Failed Login"});
-  });
-
-  router.post('/register', passport.authenticate('register',{failureRedirect:'/failregister'}), async (req,res)=>{
-    res.redirect("/login")
-  });
-
-  router.get('/failregister', async(req,res)=>{
-    console.log("Failed Strategy");
-    res.send({error: "Failed"});
-  });
-
-  export default router;
