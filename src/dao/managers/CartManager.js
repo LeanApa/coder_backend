@@ -8,7 +8,7 @@ export default class CartManager{
         try {
 
             const carritoCreado = await cartsModel.create({});
-            return (carritoCreado);
+            return (carritoCreado._id);
         } catch (error) {
             console.log('Error en la ejecución', error);
             return ('Error en la ejecución', error);
