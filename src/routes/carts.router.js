@@ -1,8 +1,64 @@
-import { Router } from "express";
+// import { Router } from "express";
 import { cartManager } from "../app.js";
+import CustomRouter from "./router.router.js";
 
 
-const router = Router();
+export default class CartsRouter extends CustomRouter{
+    init(){
+        this.get('/', async (req,res)=>{
+            const carts = await cartManager.getCarts();
+            res.send(carts); 
+        });
+        
+        this.get('/:cid', async (req, res)=>{
+            const {cid} = req.params;
+            console.log(req.params);
+            const products = await cartManager.getProductsByCartId(cid);
+            console.log(products);
+            res.send(products);
+        })
+        
+        this.post('/', async (req,res)=>{
+            const respuesta = await cartManager.addCart();
+            res.send(respuesta);
+        });
+        
+        this.post('/:cid/products/:pid', async (req,res)=>{
+            const {cid, pid} = req.params;
+            const respuesta = await cartManager.addProduct(cid, pid);
+            res.send(respuesta);
+        });
+        
+        this.delete('/:cid/products/:pid', async (req,res)=>{
+            const {cid,pid} = req.params;
+            const respuesta = await cartManager.deleteProductByProductId(cid, pid);
+            res.send(respuesta); 
+        });
+        
+        this.put('/:cid', async(req,res)=>{
+            const {cid} = req.params;
+            const newProducts = req.body;
+            console.log("Productos nuevos: ", newProducts);
+            const respuesta = await cartManager.updateProductsByCartId(cid,newProducts);
+            res.send(respuesta);
+        
+        })
+        
+        this.put('/:cid/products/:pid', async(req, res)=>{
+            const {cid, pid} = req.params;
+            const {quantity} = req.body;
+            const respuesta = await cartManager.updateProductQuantityByProductId(cid,pid,+quantity);
+            res.send(respuesta);
+        });
+        
+        this.delete('/:cid', async(req,res)=>{
+            const {cid} = req.params;
+            const respuesta = await cartManager.deleteProductsByCartId(cid);
+            res.send(respuesta);
+        });
+    }
+}
+/* const router = Router();
 
 router.get('/', async (req,res)=>{
     const carts = await cartManager.getCarts();
@@ -56,4 +112,4 @@ router.delete('/:cid', async(req,res)=>{
     res.send(respuesta);
 })
 
-export default router;
+export default router; */

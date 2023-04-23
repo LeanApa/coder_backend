@@ -3,22 +3,32 @@ import handlebars from 'express-handlebars';
 import __dirname from './utils.js';
 import ProductManager from './dao/managers/ProductManager.js';
 import CartManager from './dao/managers/CartManager.js';
-import productsRoutes from './routes/products.router.js';
-import cartsRoutes from './routes/carts.router.js';
-import viewRoutes from './routes/views.router.js';
+//import productsRoutes from './routes/products.router.js';
+//import cartsRoutes from './routes/carts.router.js';
+//import viewRoutes from './routes/views.router.js';
+//import sessionRoutes from './routes/session.router.js';
 import {Server} from 'socket.io';
 import mongoose from 'mongoose';
 import MessagesManager from './dao/managers/MessageManager.js';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
-import sessionRoutes from './routes/session.router.js';
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
+import CartsRouter from './routes/carts.router.js';
+import SessionRouter from './routes/session.router.js';
+import ProductsRouter from './routes/products.router.js';
+import ViewsRouter from './routes/views.router.js';
 
 export const productManager = new ProductManager();
 export const cartManager = new CartManager(); 
 export const messagesManager = new MessagesManager();
+
+//instancio routers
+const cartsRouter = new CartsRouter();
+const sessionRouter = new SessionRouter();
+const productsRouter = new ProductsRouter();
+const viewRouter = new ViewsRouter();
 
 const BASE_PREFIX = "/api";
 const app = express();
@@ -50,10 +60,10 @@ app.set('views', __dirname+'/views');
 app.set('view engine', 'handlebars');
 app.use(express.static(__dirname+'/public'));
 
-app.use(`${BASE_PREFIX}/products`, productsRoutes);
-app.use(`${BASE_PREFIX}/carts`, cartsRoutes);
-app.use('/', viewRoutes);
-app.use(`${BASE_PREFIX}/sessions`, sessionRoutes)
+app.use(`${BASE_PREFIX}/products`, productsRouter.getRouter());
+app.use(`${BASE_PREFIX}/carts`, cartsRouter.getRouter());
+app.use('/', viewRouter.getRouter());
+app.use(`${BASE_PREFIX}/sessions`, sessionRouter.getRouter());
 
 socketServer.on('connection', (socket)=>{
     console.log("nuevo cliente conectado");

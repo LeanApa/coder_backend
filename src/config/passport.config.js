@@ -4,10 +4,33 @@ import { userModel } from "../dao/models/users.model.js";
 import {createHash,isValidPassword} from '../utils.js';
 import GitHubStrategy from 'passport-github2';
 import { cartManager } from "../app.js";
+import jwt from 'passport-jwt';
 
+const cookieExtractor = req=>{
+    let token = null;
+    if (req&&req.cookies) {
+        token = req.cookies['cookieToken'];
+    }
+    return token;
+}
+
+
+const JWTStrategy = jwt.Strategy;
+const ExtractJWT = jwt.ExtractJwt;
 
 const LocalStrategy = local.Strategy;
 const initializePassport = ()=>{
+    passport.use('jwt',new JWTStrategy({
+        jwtFromRequest:ExtractJWT.fromExtractors([cookieExtractor]),
+        secretOrKey:'s3cr3tPassw0rd',
+    },async(jwt_payload,done)=>{
+        try {
+            return done(null,jwt_payload);
+        } catch (error) {
+            return done(error);
+        }
+    }))
+
     passport.use('register', new LocalStrategy(
         {passReqToCallback:true, usernameField:'email'}, async (req,username,password,done)=>{
             const {first_name,last_name,email,age} = req.body;
