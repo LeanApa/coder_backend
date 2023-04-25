@@ -5,7 +5,7 @@ import CustomRouter from "./router.router.js";
 
 export default class ProductsRouter extends CustomRouter{
     init(){
-        this.get('/', async (req,res)=>{
+        this.get('/',["PUBLIC"], async (req,res)=>{
             let {limit,page,query,sort} = req.query;
             const queryABuscar = {
                 stock: query === 'true' || query === 'false' && query ? query : null,
@@ -22,7 +22,7 @@ export default class ProductsRouter extends CustomRouter{
               
         })
         
-        this.get('/:pid', async (req, res)=>{
+        this.get('/:pid',["PUBLIC"], async (req, res)=>{
             const {pid} = req.params;
             console.log(req.params);
             const product = await productManager.getProductById(pid);
@@ -30,7 +30,7 @@ export default class ProductsRouter extends CustomRouter{
             res.send(product);
         })
         
-        this.post('/', async (req,res)=>{
+        this.post('/',["PUBLIC"], async (req,res)=>{
             const {title, description, code, price, status, stock, category,thumbnails} = req.body;
             const respuesta = await productManager.addProduct(title,description,code,price,status,stock,category,thumbnails);
             socketServer.emit('addProduct', ()=>{
@@ -39,7 +39,7 @@ export default class ProductsRouter extends CustomRouter{
             res.send(respuesta);
         })
         
-        this.put('/:pid', async (req, res)=>{
+        this.put('/:pid',["PUBLIC"], async (req, res)=>{
             const {pid} = req.params;
             const {title, description, code, price, status = true, stock, category,thumbnails} = req.body;
             const respuesta = await productManager.updateProduct(pid,{title,description,code,price,status,stock,category,thumbnails});
@@ -49,7 +49,7 @@ export default class ProductsRouter extends CustomRouter{
             res.send(respuesta);
         })
         
-        this.delete('/:pid', async (req, res)=>{
+        this.delete('/:pid',["PUBLIC"], async (req, res)=>{
             const {pid} = req.params;
             const respuesta = await productManager.deleteProduct(pid);
             socketServer.emit('deleteProduct', ()=>{

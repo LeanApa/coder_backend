@@ -5,12 +5,12 @@ import CustomRouter from "./router.router.js";
 
 export default class CartsRouter extends CustomRouter{
     init(){
-        this.get('/', async (req,res)=>{
+        this.get('/',["PUBLIC"], async (req,res)=>{
             const carts = await cartManager.getCarts();
             res.send(carts); 
         });
         
-        this.get('/:cid', async (req, res)=>{
+        this.get('/:cid',["PUBLIC"], async (req, res)=>{
             const {cid} = req.params;
             console.log(req.params);
             const products = await cartManager.getProductsByCartId(cid);
@@ -18,24 +18,24 @@ export default class CartsRouter extends CustomRouter{
             res.send(products);
         })
         
-        this.post('/', async (req,res)=>{
+        this.post('/',["PUBLIC"], async (req,res)=>{
             const respuesta = await cartManager.addCart();
             res.send(respuesta);
         });
         
-        this.post('/:cid/products/:pid', async (req,res)=>{
+        this.post('/:cid/products/:pid',["PUBLIC"], async (req,res)=>{
             const {cid, pid} = req.params;
             const respuesta = await cartManager.addProduct(cid, pid);
             res.send(respuesta);
         });
         
-        this.delete('/:cid/products/:pid', async (req,res)=>{
+        this.delete('/:cid/products/:pid',["PUBLIC"], async (req,res)=>{
             const {cid,pid} = req.params;
             const respuesta = await cartManager.deleteProductByProductId(cid, pid);
             res.send(respuesta); 
         });
         
-        this.put('/:cid', async(req,res)=>{
+        this.put('/:cid',["PUBLIC"], async(req,res)=>{
             const {cid} = req.params;
             const newProducts = req.body;
             console.log("Productos nuevos: ", newProducts);
@@ -44,14 +44,14 @@ export default class CartsRouter extends CustomRouter{
         
         })
         
-        this.put('/:cid/products/:pid', async(req, res)=>{
+        this.put('/:cid/products/:pid',["PUBLIC"], async(req, res)=>{
             const {cid, pid} = req.params;
             const {quantity} = req.body;
             const respuesta = await cartManager.updateProductQuantityByProductId(cid,pid,+quantity);
             res.send(respuesta);
         });
         
-        this.delete('/:cid', async(req,res)=>{
+        this.delete('/:cid',["PUBLIC"], async(req,res)=>{
             const {cid} = req.params;
             const respuesta = await cartManager.deleteProductsByCartId(cid);
             res.send(respuesta);

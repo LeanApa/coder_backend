@@ -19,7 +19,7 @@ export const generateToken = (user)=>{
     return token;
 }
 
-export const authToken = (req,res,next)=>{
+/* export const authToken = (req,res,next)=>{
     const authHeader = req.headers.authorization;
     if (!authHeader) {
         return res.status(401).send({error:"Not authenticated"});
@@ -31,7 +31,7 @@ export const authToken = (req,res,next)=>{
         req.user = credentials.user;
         next();
     })
-}
+} */
 
 export const passportCall = (strategy) =>{
     return async(req,res,next)=>{

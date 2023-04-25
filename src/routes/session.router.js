@@ -8,31 +8,36 @@ import  CustomRouter  from "./router.router.js";
 export default class SessionRouter extends CustomRouter{
     init(){
         this.get("/logout",['PUBLIC'], async (req, res)=>{
-            req.session.destroy((err)=>{
+           /*  req.session.destroy((err)=>{
                 if (!err) {
                 return res.redirect("/login");
                 }
                 return res.send({message: "error al intentar desconectarse"});
-            })
+            }) */
+            return res.clearCookie('cookieToken',{httpOnly:true}).redirect("/login");
         });
         
         this.get('/github',['PUBLIC'], passport.authenticate('github',{scope:['user:email']}), async(req,res)=>{});
         
         this.get('/githubcallback',['PUBLIC'], passport.authenticate('github', {failureRedirect:'/login'}),async(req,res)=>{
-            req.session.user = req.user;
-            res.redirect('/products');
-        })
+            const user = req.user
+            let token = generateToken(user)
+            res.cookie('cookieToken',token,{
+                maxAge:60*60*1000,
+                httpOnly:true
+            }).redirect('/products');
+        });
         
         
         this.post('/login',['PUBLIC'],async (req,res)=>{
-           const {email, password} = req.body;
+            const {email, password} = req.body;
             const user = await userModel.findOne({email:email});
             console.log("usuario generate token",user)
             let token = generateToken(user)
             res.cookie('cookieToken',token,{
                 maxAge:60*60*1000,
                 httpOnly:true
-            }).send({message:"Logged in"});
+            }).redirect("/products");//.send({message:"Logged in"});
            
            // res.redirect("/products")
         });
