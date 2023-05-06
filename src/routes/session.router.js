@@ -29,7 +29,7 @@ export default class SessionRouter extends CustomRouter{
         });
         
         
-        this.post('/login',['PUBLIC'],async (req,res)=>{
+        this.post('/login',['PUBLIC'],passport.authenticate('login',{failureRedirect:'/faillogin'}),async (req,res)=>{
             const {email, password} = req.body;
             const user = await userModel.findOne({email:email});
             console.log("usuario generate token",user)

@@ -41,7 +41,7 @@ export const passportCall = (strategy) =>{
                 return res.status(401).send({error:info.messages?info.messages:info.toString()});
             }
             req.user = user;
-            console.log("usuario en passport call: ", req.user.user._id);
+            //console.log("usuario en passport call: ", req.user.user._id);
             next();
         })(req,res,next);
     }

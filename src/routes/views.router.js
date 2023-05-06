@@ -40,7 +40,8 @@ export default class ViewsRouter extends CustomRouter{
                      last_name: req.user.user ? req.user.user.last_name : req.session.user.last_name, 
                      email: req.user.user ?req.user.user.email : req.session.user.email, 
                      age: req.user.user ? req.user.user.age : req.session.user.age, 
-                     rol: req.user.user ? req.user.user.rol : req.session.user.rol
+                     rol: req.user.user ? req.user.user.rol : req.session.user.rol,
+                     cart: req.user.user ? req.user.user.cart.toString() : req.session.user.toString()
                     };
                 let {limit,page,query,sort} = req.query;
                 const queryABuscar = {
@@ -53,6 +54,7 @@ export default class ViewsRouter extends CustomRouter{
                 const nextLink = hasNextPage ? `http://localhost:8080/products/?page=${nextPage}` : null;
                 const prevLink = hasPrevPage ? `http://localhost:8080/products/?page=${products.page-1}` : null;
         
+                console.log("El usuario a renderizar es: ", user, " Tipo de dato: ", typeof(user.cart));
                 res.render('products', {products,nextLink,prevLink, user});
            } catch (error) {
             console.log("error", error)

@@ -4,6 +4,7 @@
 <h2>Su rol es: {{user.rol}}</h2>
 <p>Su email es: {{user.email}}</p>   
 <p>Su edad es: {{user.age}}</p>
+<p>Su cart es: {{user.cart}}</p>
  
   <div>
     <form action="/api/sessions/logout" method="get">
@@ -26,7 +27,7 @@
             <p class="card-text">{{this.price}}</p>
             <p class="card-text">{{this.status}}</p>
             <p class="card-text">{{this.stock}}</p>
-            <button type="button" class="btn btn-primary AgregarCarrito" onClick="agregarAlCarrito('{{this._id}}')">Agregar al Carrito</button>
+            <button type="button" class="btn btn-primary AgregarCarrito" onClick="agregarAlCarrito('{{this._id}}','{{../user.cart}}')">Agregar al Carrito</button>
         </div>
     </div>
 {{/each}}

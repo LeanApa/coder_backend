@@ -1,6 +1,8 @@
-const agregarAlCarrito = (_id)=>{
+const agregarAlCarrito = (_id,cart)=>{
     console.log("Este es el id del producto", _id);
-    fetch(`http://localhost:8080/api/carts/6416473b92a4361879037017/products/${_id}`, {
+    console.log("Tipo de dato del carrito", cart);
+
+    fetch(`http://localhost:8080/api/carts/${cart}/products/${_id}`, {
         method: 'POST'
      })
 }
