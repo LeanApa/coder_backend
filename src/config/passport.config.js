@@ -3,7 +3,7 @@ import local from 'passport-local';
 import { userModel } from "../dao/models/users.model.js";
 import {createHash,generateToken,isValidPassword} from '../utils.js';
 import GitHubStrategy from 'passport-github2';
-import { cartManager } from "../app.js";
+import { cartService } from "../app.js";
 import jwt from 'passport-jwt';
 
 const cookieExtractor = req=>{
@@ -47,7 +47,7 @@ const initializePassport = ()=>{
                     email,
                     age,
                     password: createHash(password),
-                    cart: await cartManager.addCart()
+                    cart: await cartService.addCart()
                 }
 
                 let result = await userModel.create(newUser);

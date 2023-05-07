@@ -18,9 +18,9 @@ import ViewsRouter from './routes/views.router.js';
 import cors from 'cors';
 import env from './config/config.js';
 
-export const productManager = new ProductManager();
-export const cartManager = new CartManager(); 
-export const messagesManager = new MessagesManager();
+export const productService = new ProductManager();
+export const cartService = new CartManager(); 
+export const messagesService = new MessagesManager();
 
 //instancio routers
 const cartsRouter = new CartsRouter();

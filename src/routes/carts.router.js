@@ -1,115 +1,24 @@
-// import { Router } from "express";
-import { cartManager } from "../app.js";
+import { addCart, addProduct, deleteProductByProductId, deleteProductsByCartId, getCarts, getProductsByCartId, updateProductQuantityByProductId, updateProductsByCartId } from "../controllers/cart.controller.js";
+import { passportCall } from "../utils.js";
 import CustomRouter from "./router.router.js";
 
 
 export default class CartsRouter extends CustomRouter{
     init(){
-        this.get('/',["PUBLIC"], async (req,res)=>{
-            const carts = await cartManager.getCarts();
-            res.send(carts); 
-        });
+        this.get('/',["PUBLIC"], getCarts);
         
-        this.get('/:cid',["PUBLIC"], async (req, res)=>{
-            const {cid} = req.params;
-            console.log(req.params);
-            const products = await cartManager.getProductsByCartId(cid);
-            console.log(products);
-            res.send(products);
-        })
+        this.get('/:cid',["PUBLIC"], getProductsByCartId);
         
-        this.post('/',["PUBLIC"], async (req,res)=>{
-            const respuesta = await cartManager.addCart();
-            res.send(respuesta);
-        });
+        this.post('/',["PUBLIC"], addCart);
         
-        this.post('/:cid/products/:pid',["PUBLIC"], async (req,res)=>{
-            const {cid, pid} = req.params;
-            const respuesta = await cartManager.addProduct(cid, pid);
-            res.send(respuesta);
-        });
+        this.post('/:cid/products/:pid', ["USER", "ADMIN"],passportCall('jwt'), addProduct);
         
-        this.delete('/:cid/products/:pid',["PUBLIC"], async (req,res)=>{
-            const {cid,pid} = req.params;
-            const respuesta = await cartManager.deleteProductByProductId(cid, pid);
-            res.send(respuesta); 
-        });
+        this.delete('/:cid/products/:pid',["PUBLIC"], deleteProductByProductId);
         
-        this.put('/:cid',["PUBLIC"], async(req,res)=>{
-            const {cid} = req.params;
-            const newProducts = req.body;
-            console.log("Productos nuevos: ", newProducts);
-            const respuesta = await cartManager.updateProductsByCartId(cid,newProducts);
-            res.send(respuesta);
+        this.put('/:cid',["PUBLIC"], updateProductsByCartId)
         
-        })
+        this.put('/:cid/products/:pid',["PUBLIC"],updateProductQuantityByProductId);
         
-        this.put('/:cid/products/:pid',["PUBLIC"], async(req, res)=>{
-            const {cid, pid} = req.params;
-            const {quantity} = req.body;
-            const respuesta = await cartManager.updateProductQuantityByProductId(cid,pid,+quantity);
-            res.send(respuesta);
-        });
-        
-        this.delete('/:cid',["PUBLIC"], async(req,res)=>{
-            const {cid} = req.params;
-            const respuesta = await cartManager.deleteProductsByCartId(cid);
-            res.send(respuesta);
-        });
+        this.delete('/:cid',["PUBLIC"], deleteProductsByCartId);
     }
 }
-/* const router = Router();
-
-router.get('/', async (req,res)=>{
-    const carts = await cartManager.getCarts();
-    res.send(carts); 
-})
-
-router.get('/:cid', async (req, res)=>{
-    const {cid} = req.params;
-    console.log(req.params);
-    const products = await cartManager.getProductsByCartId(cid);
-    console.log(products);
-    res.send(products);
-})
-
-router.post('/', async (req,res)=>{
-    const respuesta = await cartManager.addCart();
-    res.send(respuesta);
-});
-
-router.post('/:cid/products/:pid', async (req,res)=>{
-    const {cid, pid} = req.params;
-    const respuesta = await cartManager.addProduct(cid, pid);
-    res.send(respuesta);
-});
-
-router.delete('/:cid/products/:pid', async (req,res)=>{
-    const {cid,pid} = req.params;
-    const respuesta = await cartManager.deleteProductByProductId(cid, pid);
-    res.send(respuesta); 
-});
-
-router.put('/:cid', async(req,res)=>{
-    const {cid} = req.params;
-    const newProducts = req.body;
-    console.log("Productos nuevos: ", newProducts);
-    const respuesta = await cartManager.updateProductsByCartId(cid,newProducts);
-    res.send(respuesta);
-
-})
-
-router.put('/:cid/products/:pid', async(req, res)=>{
-    const {cid, pid} = req.params;
-    const {quantity} = req.body;
-    const respuesta = await cartManager.updateProductQuantityByProductId(cid,pid,+quantity);
-    res.send(respuesta);
-})
-
-router.delete('/:cid', async(req,res)=>{
-    const {cid} = req.params;
-    const respuesta = await cartManager.deleteProductsByCartId(cid);
-    res.send(respuesta);
-})
-
-export default router; */

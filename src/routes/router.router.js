@@ -1,4 +1,5 @@
 import {Router} from 'express';
+import jwt from 'jsonwebtoken'
 
 export default class CustomRouter{
     constructor(){
@@ -13,7 +14,6 @@ export default class CustomRouter{
     init(){}
 
     get(path, policies, ...callbacks){
-        console.log("LA POLITICA ES ESTA EN GET: ", policies)
         this.router.get(path,this.handlePolicies(policies),this.generateCustomResponses, this.applyCallbacks(callbacks));
     }
 
@@ -52,10 +52,16 @@ export default class CustomRouter{
     handlePolicies = policies => (req,res,next)=>{
         console.log("LA POLITICA ES ESTA: ", policies[0])
         if(policies[0]==="PUBLIC") return next();
-        const authHeaders = req.headers.authorization;
-        if(!authHeaders) return res.status(401).send({status:"error",error:"Unauthorized"});
-        const token = authHeaders.split(" ")[1];
-        let user = jwt.verify(token, 's3cr3tPassw0rd');
+        const authHeaders = req.headers.cookie;
+        if(!req.user) return res.status(401).send({status:"error",error:"Unauthorized"});
+        const header = authHeaders.split("=")[1];
+        const token = header.split(";")[0];
+
+        console.log("Este policies: ", policies)
+        console.log("Este es el req.user: ", req.user)
+        console.log("Este es el header: ", authHeaders)
+        console.log("Este es el token a verificar: ", token)
+        let user = req.user;
         if(!policies.includes(user.rol.toUpperCase())) return res.status(403).send({status:"error",error:"Forbidden"});
         req.user = user;
         next();
