@@ -8,14 +8,14 @@ export default class ViewsRouter extends CustomRouter{
     init(){
         this.get('/',["PUBLIC"], login);
         
-        this.get('/realtimeproducts',["PUBLIC"],authMdw, realtimeproducts);
+        this.get('/realtimeproducts',["PUBLIC"], realtimeproducts);
         
-        this.get('/chat',["USER"],authMdw, getAllMessages)
+        this.get('/chat',["USER"], getAllMessages)
         
         this.get('/products',["PUBLIC"],passportCall('jwt'), getProducts);
         
         
-        this.get('/carts/:cid',["PUBLIC"],authMdw, getProductsByCartId);
+        this.get('/carts/:cid',["PUBLIC"], getProductsByCartId);
         
         
         this.get("/login",["PUBLIC"], loginRender)

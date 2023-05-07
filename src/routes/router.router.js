@@ -56,13 +56,9 @@ export default class CustomRouter{
         if(!req.user) return res.status(401).send({status:"error",error:"Unauthorized"});
         const header = authHeaders.split("=")[1];
         const token = header.split(";")[0];
-
-        console.log("Este policies: ", policies)
-        console.log("Este es el req.user: ", req.user)
-        console.log("Este es el header: ", authHeaders)
-        console.log("Este es el token a verificar: ", token)
-        let user = req.user;
-        if(!policies.includes(user.rol.toUpperCase())) return res.status(403).send({status:"error",error:"Forbidden"});
+        let user = jwt.verify(token,'s3cr3tPassw0rd');
+        console.log("Este es el user: ", user)
+        if(!policies.includes(user.user.rol.toUpperCase())) return res.status(403).send({status:"error",error:"Forbidden"});
         req.user = user;
         next();
     
