@@ -58,7 +58,7 @@ export default class ProductManager{
 
     getProductById = async (id)=>{
         try {
-            const productoEncontrado = await productModel.find({_id:id}).lean();
+            const productoEncontrado = await productModel.findById({_id:id}).lean();
             if (!productoEncontrado) {
                 return {Error: "Item Not found"};
             }
@@ -78,10 +78,12 @@ export default class ProductManager{
                 code: code ? code : productoEncontrado.code, 
                 price: price ? price : productoEncontrado.price,
                 status: status ? status : productoEncontrado.status,
-                stock: stock ? stock : productoEncontrado.stock, 
+                stock: (stock || stock === 0) ? stock : productoEncontrado.stock, 
                 category: category ? category : productoEncontrado.category,
                 thumbnails: thumbnails ? thumbnails : productoEncontrado.thumbnails, 
             }
+            //console.log("producto  a updatear", producto);
+            //console.log("stock: ", stock);
             await productModel.findByIdAndUpdate({_id:id},{...productoUpdated});
             return {Message: "Item updated"};
         } catch (error) {

@@ -1,4 +1,4 @@
-import { addCart, addProduct, deleteProductByProductId, deleteProductsByCartId, getCarts, getProductsByCartId, updateProductQuantityByProductId, updateProductsByCartId } from "../controllers/cart.controller.js";
+import { addCart, addProduct, deleteProductByProductId, deleteProductsByCartId, getCarts, getProductsByCartId, updateProductQuantityByProductId, updateProductsByCartId, purchaseProducts } from "../controllers/cart.controller.js";
 import { passportCall } from "../utils.js";
 import CustomRouter from "./router.router.js";
 
@@ -20,5 +20,7 @@ export default class CartsRouter extends CustomRouter{
         this.put('/:cid/products/:pid',["PUBLIC"],updateProductQuantityByProductId);
         
         this.delete('/:cid',["PUBLIC"], deleteProductsByCartId);
+
+        this.post('/:cid/purchase',["PUBLIC"],passportCall('jwt'),purchaseProducts);
     }
 }

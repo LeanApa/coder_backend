@@ -14,9 +14,7 @@ export default class ViewsRouter extends CustomRouter{
         
         this.get('/products',["PUBLIC"],passportCall('jwt'), getProducts);
         
-        
-        this.get('/carts/:cid',["PUBLIC"], getProductsByCartId);
-        
+        this.get('/carts/:cid',["PUBLIC"], getProductsByCartId);       
         
         this.get("/login",["PUBLIC"], loginRender)
         

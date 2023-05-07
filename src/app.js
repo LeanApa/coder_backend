@@ -17,16 +17,19 @@ import ProductsRouter from './routes/products.router.js';
 import ViewsRouter from './routes/views.router.js';
 import cors from 'cors';
 import env from './config/config.js';
+import TicketManager from './dao/managers/TicketManager.js';
 
 export const productService = new ProductManager();
 export const cartService = new CartManager(); 
 export const messagesService = new MessagesManager();
+export const ticketService = new TicketManager();
 
 //instancio routers
 const cartsRouter = new CartsRouter();
 const sessionRouter = new SessionRouter();
 const productsRouter = new ProductsRouter();
 const viewRouter = new ViewsRouter();
+
 
 const BASE_PREFIX = "/api";
 const app = express();
@@ -42,7 +45,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 app.use(session({
     store: MongoStore.create({
-        mongoUrl:"mongodb+srv://leaapagro:1234@ecommerce.h9vznv2.mongodb.net/?retryWrites=true&w=majority",
+        mongoUrl:env.mongoUrl,
         mongoOptions:{useNewUrlParser: true, useUnifiedTopology:true},
         ttl:60*3600
     }),

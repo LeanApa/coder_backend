@@ -1,5 +1,7 @@
 import { pid } from "process";
 import { cartsModel } from "../models/carts.model.js";
+import { ticketModel } from "../models/tickets.model.js";
+import { productService } from "../../app.js";
 
 
 export default class CartManager{
@@ -90,8 +92,9 @@ export default class CartManager{
         try {
             let carritoEncontrado = await cartsModel.findById({_id:cid}).lean();
             carritoEncontrado.products = newProducts;
-            await cartsModel.findByIdAndUpdate({_id:cid}, {_id:cid, ...carritoEncontrado});
-            return {messaage:"Carrito modificado"}; 
+            console.log('update del carrito', carritoEncontrado);
+            const carritoModificado = await cartsModel.findByIdAndUpdate({_id:cid}, {_id:cid, ...carritoEncontrado});
+            return carritoModificado; 
         } catch (error) {
             console.log('Error en la ejecución', error);
         }    
@@ -126,6 +129,30 @@ export default class CartManager{
         }
     }
 
+    purchaseProducts = async(cid) =>{
+        let carritoEncontrado = await cartsModel.findById({_id:cid}).populate('products.product').lean();
+        let nuevoCarrito = [];
+        let amount = 0;    
+        carritoEncontrado.products.forEach(async (item)=>{
+            let productoEncontrado = await productService.getProductById(item.product._id);
+            if (productoEncontrado.stock < item.quantity) {
+                nuevoCarrito.push(item);
+            }else{
+                amount = amount + (productoEncontrado.price * item.quantity);
+                productoEncontrado.stock = productoEncontrado.stock - item.quantity;
+                await productService.updateProduct(productoEncontrado._id, productoEncontrado);
+            }     
+        });
+        const newCart = await this.updateProductsByCartId( cid, nuevoCarrito);
+        console.log("nuevoCarrito: ", nuevoCarrito);  
+        const productosNoComprados = nuevoCarrito.map((elem)=>elem.product._id); 
+        return {productosNoComprados, amount};
+    }
+}
+    
+        
+    
+
+
 
     
-}

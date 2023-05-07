@@ -8,8 +8,10 @@ import jwt from 'passport-jwt';
 
 const cookieExtractor = req=>{
     let token = null;
+    console.log("Acá llegó el req: ");
     if (req&&req.cookies) {
         token = req.cookies['cookieToken'];
+        console.log("Acá llegó el req, token: ", token);
     }
     return token;
 }
