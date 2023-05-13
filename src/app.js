@@ -18,6 +18,8 @@ import ViewsRouter from './routes/views.router.js';
 import cors from 'cors';
 import env from './config/config.js';
 import TicketManager from './dao/managers/TicketManager.js';
+import MockingRouter from './routes/mocking.router.js';
+import errorHandler from './middleware/error.js'
 
 export const productService = new ProductManager();
 export const cartService = new CartManager(); 
@@ -29,6 +31,7 @@ const cartsRouter = new CartsRouter();
 const sessionRouter = new SessionRouter();
 const productsRouter = new ProductsRouter();
 const viewRouter = new ViewsRouter();
+const mockingRouter = new MockingRouter();
 
 
 const BASE_PREFIX = "/api";
@@ -56,6 +59,7 @@ app.use(session({
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(errorHandler);
 
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname+'/views');
@@ -66,13 +70,14 @@ app.use(`${BASE_PREFIX}/products`, productsRouter.getRouter());
 app.use(`${BASE_PREFIX}/carts`, cartsRouter.getRouter());
 app.use('/', viewRouter.getRouter());
 app.use(`${BASE_PREFIX}/sessions`, sessionRouter.getRouter());
+app.use('/mockingproducts', mockingRouter.getRouter());
 
 socketServer.on('connection', (socket)=>{
     console.log("nuevo cliente conectado");
 
     socket.on('message', async (data) => {
-        await messagesManager.addMessages(data);
-        const messages = await messagesManager.getAllMessages();
+        await messagesService.addMessages(data);
+        const messages = await messagesService.getAllMessages();
         socketServer.emit('messageLogs',messages);
     })
 })

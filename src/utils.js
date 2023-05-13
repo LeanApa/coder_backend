@@ -3,6 +3,7 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
+import {faker} from '@faker-js/faker/locale/es';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,19 +20,7 @@ export const generateToken = (user)=>{
     return token;
 }
 
-/* export const authToken = (req,res,next)=>{
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        return res.status(401).send({error:"Not authenticated"});
-    }
 
-    const token = authHeader.split(' ')[1];
-    jwt.verify(token,PRIVATE_KEY,(error,credentials)=>{
-        if(error) return res.status(403).send({error:"Not authorized"});
-        req.user = credentials.user;
-        next();
-    })
-} */
 
 export const passportCall = (strategy) =>{
     return async(req,res,next)=>{
@@ -45,5 +34,19 @@ export const passportCall = (strategy) =>{
             //console.log("usuario en passport call: ", req.user.user._id);
             next();
         })(req,res,next);
+    }
+}
+
+export const generateProducts = ()=>{
+    return{
+        _id: faker.database.mongodbObjectId(),
+        title: faker.commerce.productName(),
+        description: faker.commerce.productDescription(),
+        code: faker.string.alphanumeric(5),
+        price: faker.commerce.price(),
+        status:  true,
+        stock: faker.number.int(10),
+        category: faker.commerce.department(),
+        thumbnail: faker.image.url()
     }
 }

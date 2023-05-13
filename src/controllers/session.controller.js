@@ -16,7 +16,7 @@ export const githubcallback = async(req,res)=>{
 }
 
 export const login = async (req,res)=>{
-    const {email, password} = req.body;
+    const {email} = req.body;
     const user = await userModel.findOne({email:email});
     console.log("usuario generate token",user)
     let token = generateToken(user)

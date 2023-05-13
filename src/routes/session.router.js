@@ -23,10 +23,7 @@ export default class SessionRouter extends CustomRouter{
         this.get('/failregister',['PUBLIC'], failregister);
 
         this.get('/current',['PUBLIC'],passportCall('jwt'), current);
-        
-        /* this.get('/current',['PUBLIC'],passportCall('jwt'),authorization('user'), async (req,res)=>{
-            res.send(req.user);
-        }); */
+      
     }
  
 }
