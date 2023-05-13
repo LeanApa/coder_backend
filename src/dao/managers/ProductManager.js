@@ -1,4 +1,7 @@
 import { productModel } from "../models/products.model.js";
+import CustomErrors from './errors/CustomErrors.js'
+import EErrors from './errors/enums.js'
+import {generateProductErrorInfo} from './errors/info.js'
 
 export default class ProductManager{
   
@@ -18,6 +21,12 @@ export default class ProductManager{
             if(existeProducto){
                 return "El producto ingresado ya existe";
             }else if(code===null || code===""  || title === null || title === "" || description === null || description === "" || price === null || price === "" || thumbnails === null || thumbnails === "" || stock === null || stock === "" || category === null || category === ""){
+                CustomErrors.createError({
+                    name:"Product creation error",
+                    cause:generateProductErrorInfo({title,description, code, price,status,stock, category, thumbnails}),
+                    message:"Error trying to create a product",
+                    code:EErrors.PRODUCT_CREATION_ERROR
+                });
                 console.log("Error: Faltan ingresar datos del producto");
                 return ("Error: Faltan ingresar datos del producto");
             }else{
