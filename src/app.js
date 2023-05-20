@@ -20,6 +20,8 @@ import env from './config/config.js';
 import TicketManager from './dao/managers/TicketManager.js';
 import MockingRouter from './routes/mocking.router.js';
 import errorHandler from './middleware/error.js'
+import { addLogger } from './utils.js';
+import LoggerRouter from './routes/loggerTest.router.js';
 
 export const productService = new ProductManager();
 export const cartService = new CartManager(); 
@@ -32,6 +34,7 @@ const sessionRouter = new SessionRouter();
 const productsRouter = new ProductsRouter();
 const viewRouter = new ViewsRouter();
 const mockingRouter = new MockingRouter();
+const loggerRouter = new LoggerRouter();
 
 
 const BASE_PREFIX = "/api";
@@ -60,6 +63,7 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(errorHandler);
+app.use(addLogger);
 
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname+'/views');
@@ -71,6 +75,7 @@ app.use(`${BASE_PREFIX}/carts`, cartsRouter.getRouter());
 app.use('/', viewRouter.getRouter());
 app.use(`${BASE_PREFIX}/sessions`, sessionRouter.getRouter());
 app.use('/mockingproducts', mockingRouter.getRouter());
+app.use('/loggertest', loggerRouter.getRouter());
 
 socketServer.on('connection', (socket)=>{
     console.log("nuevo cliente conectado");

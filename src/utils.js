@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import {faker} from '@faker-js/faker/locale/es';
+import winston from 'winston'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -49,4 +50,68 @@ export const generateProducts = ()=>{
         category: faker.commerce.department(),
         thumbnail: faker.image.url()
     }
+}
+
+const customLevelOptions = {
+    levels: {
+        fatal:0,
+        error: 1,
+        warning:2 ,
+        info: 3,
+        http: 4,
+        debug:5,
+    },
+    colors:{
+       fatal: 'red', 
+       error: 'red', 
+       warning: 'yellow', 
+       info: 'blue', 
+       http: 'white', 
+       debug: 'white', 
+    }
+}
+
+//configuacion del prodLogger
+const prodLogger = winston.createLogger({
+    levels: customLevelOptions.levels,
+    transports:[
+        new winston.transports.Console({
+            level:"info",
+            format: winston.format.combine(
+                winston.format.colorize({colors: customLevelOptions.colors}),
+                winston.format.simple()
+            )
+        }),
+        new winston.transports.File({
+            filename: './error.log',
+            level: "error",
+            format: winston.format.simple()
+        })
+    ]
+})
+
+//configuacion del devLogger
+const devLogger = winston.createLogger({
+    levels: customLevelOptions.levels,
+    transports:[
+        new winston.transports.Console({
+            level:"debug",
+            format: winston.format.combine(
+                winston.format.colorize({colors: customLevelOptions.colors}),
+                winston.format.simple()
+            )
+        })
+    ]
+})
+
+export const addLogger = (req,res,next)=>{
+    if(process.env.NODE_ENV === "production"){
+        req.logger = prodLogger;
+    }else{
+        req.logger = devLogger;
+    }
+    
+    //req.logger.http(`[${req.method}]  en ${req.url} - ${new Date().toLocaleTimeString()}`)
+    next();
+
 }
