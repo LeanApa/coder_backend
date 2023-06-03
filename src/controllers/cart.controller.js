@@ -4,6 +4,7 @@ export const getCarts = async (req, res) => {
   try {
     const carts = await cartService.getCarts();
     res.send(carts);
+    res.send({ status: "success", payload: carts})
   } catch (error) {
     req.logger.error(error);
   }
@@ -12,7 +13,6 @@ export const getCarts = async (req, res) => {
 export const getProductsByCartId = async (req, res) => {
   try {
     const { cid } = req.params;
-    req.logger.debug(products);
     const products = await cartService.getProductsByCartId(cid);
     req.logger.debug(products);
     res.send(products);

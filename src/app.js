@@ -22,6 +22,8 @@ import MockingRouter from './routes/mocking.router.js';
 import errorHandler from './middleware/error.js'
 import { addLogger } from './utils.js';
 import LoggerRouter from './routes/loggerTest.router.js';
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUiExpress from 'swagger-ui-express'
 
 export const productService = new ProductManager();
 export const cartService = new CartManager(); 
@@ -42,8 +44,19 @@ const app = express();
 const httpServer = app.listen(8080, ()=>console.log("Listening on port 8080"));
 export const socketServer = new Server(httpServer);
 mongoose.connect(env.mongoUrl);
+const swaggerOptions = {
+    definition:{
+        openapi: "3.0.1",
+        info:{
+            title: "Documentación API Coderhouse",
+            description: "API Ecommerce Coderhouse"
+        }
+    },
+    apis:['src/docs/**/*.yaml']
+}
 
-
+const specs = swaggerJsdoc(swaggerOptions);
+app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 app.use(express.json());
 app.use(cors());
