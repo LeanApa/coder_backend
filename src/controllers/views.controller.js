@@ -1,4 +1,7 @@
 import { cartService, messagesService, productService } from "../app.js";
+import { userModel } from "../dao/models/users.model.js";
+import jwt from "jsonwebtoken";
+import { isValidPassword, createHash } from "../utils.js";
 
 export const login = async (req, res) => {
   return res.redirect("/login");
@@ -85,4 +88,32 @@ export const loginRender = async (req, res) => {
 
 export const register = async (req, res) => {
   res.render("register");
+};
+
+export const verify = async (req, res) => {
+  try {
+    const { token, tomail } = req.query;
+    jwt.verify(token, "secreto");
+    res.render("passwordReset", { tomail });
+  } catch (error) {
+    res.render("login");
+  }
+};
+
+export const passwordReset = async (req, res) => {
+  try {
+    const { newPassword, tomail } = req.body;
+    const user = await userModel.findOne({ email: tomail });
+    if (isValidPassword(user, newPassword)) {
+      const message = "La nueva contraseña no puede ser igual a la anterior";
+      res.render("passwordReset", { tomail, message });
+    }else{
+      user.password = createHash(newPassword);
+      await userModel.findByIdAndUpdate(user._id, user);
+      res.redirect("/login");
+    }
+  
+  } catch (error) {
+    console.log(error);
+  }
 };

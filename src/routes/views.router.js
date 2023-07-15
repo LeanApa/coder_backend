@@ -1,7 +1,7 @@
 import authMdw from "../middleware/auth.js";
 import  CustomRouter  from "./router.router.js";
 import { passportCall } from "../utils.js";
-import { login, realtimeproducts, getAllMessages, getProducts, getProductsByCartId, loginRender, register } from "../controllers/views.controller.js";
+import { login, realtimeproducts, getAllMessages, getProducts, getProductsByCartId, loginRender, register, verify, passwordReset } from "../controllers/views.controller.js";
 
 export default class ViewsRouter extends CustomRouter{
 
@@ -16,9 +16,13 @@ export default class ViewsRouter extends CustomRouter{
         
         this.get('/carts/:cid',["PUBLIC"], getProductsByCartId);       
         
-        this.get("/login",["PUBLIC"], loginRender)
+        this.get("/login",["PUBLIC"], loginRender);
         
-        this.get("/register",["PUBLIC"], register)
+        this.get("/register",["PUBLIC"], register);
+
+        this.get("/verify",["PUBLIC"], verify);
+
+        this.post("/passwordreset", ["PUBLIC"], passwordReset);
 
     }
 }

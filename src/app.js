@@ -24,7 +24,9 @@ import { addLogger } from './utils.js';
 import LoggerRouter from './routes/loggerTest.router.js';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUiExpress from 'swagger-ui-express'
-import nodemailer from 'nodemailer';
+import MailRouter from './routes/mail.router.js';
+
+
 
 export const productService = new ProductManager();
 export const cartService = new CartManager(); 
@@ -38,6 +40,7 @@ const productsRouter = new ProductsRouter();
 const viewRouter = new ViewsRouter();
 const mockingRouter = new MockingRouter();
 const loggerRouter = new LoggerRouter();
+const mailRouter = new MailRouter();
 
 
 const BASE_PREFIX = "/api";
@@ -93,6 +96,7 @@ app.use('/', viewRouter.getRouter());
 app.use(`${BASE_PREFIX}/sessions`, sessionRouter.getRouter());
 app.use('/mockingproducts', mockingRouter.getRouter());
 app.use('/loggertest', loggerRouter.getRouter());
+app.use('/mail', mailRouter.getRouter());
 
 socketServer.on('connection', (socket)=>{
     console.log("nuevo cliente conectado");
@@ -104,36 +108,9 @@ socketServer.on('connection', (socket)=>{
     })
 })
 
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    port:587,
-    auth: {
-      user: 'lea.apagro@gmail.com',
-      pass: 'sobtvqogbbvxpraj'
-    }
-  });
+
   
 
-app.get('/mail', async (req,res)=>{
-    try {
-        //Tuve que agregar esta linea para que no me de error al enviar el mail, intenté con el código del profe pero no funcionó
-        process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
-        let result = await transporter.sendMail({
-            from:'Prueba <lea.apagro@gmail.com>',
-            to:'leandroapablazagrobli@gmail.com',
-            subject:'prueba',
-            html:`
-            <div>
-                <h1>pruebites</h1>
-            </div>`,
-            attachments:[]
-        })
-        process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "1";
-        res.send({message: "Mensaje enviado", payload: result});
-    } catch (error) {
-        console.log(error);
-    }
-})
 
 
 

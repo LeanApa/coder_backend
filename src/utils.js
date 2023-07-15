@@ -4,7 +4,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import {faker} from '@faker-js/faker/locale/es';
-import winston from 'winston'
+import winston from 'winston';
+import nodemailer from 'nodemailer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -112,3 +113,12 @@ export const addLogger = (req,res,next)=>{
     }
     next();
 }
+
+export const transporter = nodemailer.createTransport({
+    service: "gmail",
+    port:587,
+    auth: {
+      user: 'lea.apagro@gmail.com',
+      pass: 'sobtvqogbbvxpraj'
+    }
+  });
