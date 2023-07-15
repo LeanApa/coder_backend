@@ -24,6 +24,7 @@ import { addLogger } from './utils.js';
 import LoggerRouter from './routes/loggerTest.router.js';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUiExpress from 'swagger-ui-express'
+import nodemailer from 'nodemailer';
 
 export const productService = new ProductManager();
 export const cartService = new CartManager(); 
@@ -97,6 +98,23 @@ socketServer.on('connection', (socket)=>{
         await messagesService.addMessages(data);
         const messages = await messagesService.getAllMessages();
         socketServer.emit('messageLogs',messages);
+    })
+})
+
+const transporter = nodemailer.createTransport({
+    service:'gmail',
+    port:587,
+    auth:{
+        user:'lea.apagro@gmail.com',
+        pass:'sobtvqogbbvxpraj'
+    }
+})
+app.get('/mail', async (req,res)=>{
+    let result = await transporter.sendMail({
+        from:'Prueba <lea.apagro@gmail.com>',
+        to:'leandroapablazagrobli@gmail.com',
+        html:`<h1>Prueba de envio de email</h1>`,
+        attachments:[]
     })
 })
 

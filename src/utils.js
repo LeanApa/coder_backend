@@ -110,8 +110,5 @@ export const addLogger = (req,res,next)=>{
     }else{
         req.logger = devLogger;
     }
-    
-    //req.logger.http(`[${req.method}]  en ${req.url} - ${new Date().toLocaleTimeString()}`)
     next();
-
 }
