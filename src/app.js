@@ -73,6 +73,9 @@ app.use(session({
     resave:false,
     saveUninitialized:false
 }));
+
+
+
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
@@ -102,20 +105,33 @@ socketServer.on('connection', (socket)=>{
 })
 
 const transporter = nodemailer.createTransport({
-    service:'gmail',
-    port:587,
-    auth:{
-        user:'lea.apagro@gmail.com',
-        pass:'sobtvqogbbvxpraj'
+    service: "gmail",
+    auth: {
+      user: 'lea.apagro@gmail.com',
+      pass: 'sobtvqogbbvxpraj'
     }
-})
+  });
+  
+
 app.get('/mail', async (req,res)=>{
-    let result = await transporter.sendMail({
-        from:'Prueba <lea.apagro@gmail.com>',
-        to:'leandroapablazagrobli@gmail.com',
-        html:`<h1>Prueba de envio de email</h1>`,
-        attachments:[]
-    })
+    try {
+        //Tuve que agregar esta linea para que no me de error al enviar el mail, intenté con el código del profe pero no funcionó
+        process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
+        let result = await transporter.sendMail({
+            from:'Prueba <lea.apagro@gmail.com>',
+            to:'leandroapablazagrobli@gmail.com',
+            subject:'prueba',
+            html:`
+            <div>
+                <h1>pruebites</h1>
+            </div>`,
+            attachments:[]
+        })
+        process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "1";
+        res.send({message: "Mensaje enviado", payload: result});
+    } catch (error) {
+        console.log(error);
+    }
 })
 
 
