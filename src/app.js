@@ -106,6 +106,7 @@ socketServer.on('connection', (socket)=>{
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
+    port:587,
     auth: {
       user: 'lea.apagro@gmail.com',
       pass: 'sobtvqogbbvxpraj'
