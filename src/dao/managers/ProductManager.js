@@ -12,7 +12,8 @@ export default class ProductManager {
     status = true,
     stock,
     category,
-    thumbnails
+    thumbnails,
+    owner = "admin"
   ) => {
     try {
       const nuevoProducto = {
@@ -24,6 +25,7 @@ export default class ProductManager {
         stock,
         category,
         thumbnails,
+        owner
       };
       const existeProducto = await productModel.findOne({
         code: nuevoProducto.code,

@@ -50,6 +50,7 @@ export default class CustomRouter{
 
     handlePolicies = policies => (req,res,next)=>{
         req.logger.debug(`LA POLITICA ES ESTA:  ${policies[0]}`);
+        req.logger.debug(`req.user :  ${req.user}`);
         if(policies[0]==="PUBLIC") return next();
         const authHeaders = req.headers.cookie;
         if(!req.user) return res.status(401).send({status:"error",error:"Unauthorized"});

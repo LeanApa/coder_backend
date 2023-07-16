@@ -44,6 +44,7 @@ export const getProductById = async (req, res) => {
 
 export const addProduct = async (req, res) => {
   try {
+    const owner = req.user.email;
     const {
       title,
       description,
@@ -52,7 +53,7 @@ export const addProduct = async (req, res) => {
       status,
       stock,
       category,
-      thumbnails,
+      thumbnails
     } = req.body;
     const respuesta = await productService.addProduct(
       title,
@@ -62,7 +63,8 @@ export const addProduct = async (req, res) => {
       status,
       stock,
       category,
-      thumbnails
+      thumbnails,
+      owner
     );
     socketServer.emit("addProduct", () => {
       req.logger.info("nuevo producto aniadido");
