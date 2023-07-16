@@ -7,7 +7,7 @@ export default class ProductsRouter extends CustomRouter{
         
         this.get('/:pid',["PUBLIC"], getProductById);
         
-        this.post('/',["ADMIN"], addProduct);
+        this.post('/',["ADMIN", "PREMIUM"], addProduct);
         
         this.put('/:pid',["ADMIN"], updateProduct);
         
