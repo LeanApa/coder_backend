@@ -52,13 +52,27 @@ export default class CustomRouter{
         req.logger.debug(`LA POLITICA ES ESTA:  ${policies[0]}`);
         req.logger.debug(`req.user :  ${req.user}`);
         if(policies[0]==="PUBLIC") return next();
-        const authHeaders = req.headers.cookie;
-        if(!req.user) return res.status(401).send({status:"error",error:"Unauthorized"});
-        const header = authHeaders.split("=")[1];
-        const token = header.split(";")[0];
-        let user = jwt.verify(token,'s3cr3tPassw0rd');
-        req.logger.debug(`Este es el user:  ${user}`);
-        if(!policies.includes(user.user.rol.toUpperCase())) return res.status(403).send({status:"error",error:"Forbidden"});
+        const userAgent = req.headers['user-agent'];
+        let user;
+        if (userAgent.includes('Postman') || userAgent.includes('HTTPClient')){   
+            const authHeaders = req.headers.authorization;
+            req.logger.debug(`Este es el Authorization:  ${JSON.stringify(authHeaders)}`);
+            if(!req.user) return res.status(401).send({status:"error",error:"Unauthorized"});
+            const header = authHeaders.split(" ")[1];
+            req.logger.debug(`Este es el token:  ${JSON.stringify(header)}`);
+            const token = header;
+            user = jwt.verify(token,'s3cr3tPassw0rd');
+            req.logger.debug(`Este es el user:  ${user}`);
+            if(!policies.includes(user.user.rol.toUpperCase())) return res.status(403).send({status:"error",error:"Forbidden"});
+        }else{
+            const authHeaders = req.headers.cookie;
+            if(!req.user) return res.status(401).send({status:"error",error:"Unauthorized"});
+            const header = authHeaders.split("=")[1];
+            const token = header.split(";")[0];
+            user = jwt.verify(token,'s3cr3tPassw0rd');
+            req.logger.debug(`Este es el user:  ${user}`);
+            if(!policies.includes(user.user.rol.toUpperCase())) return res.status(403).send({status:"error",error:"Forbidden"});
+        }
         req.user = user;
         next();
     
