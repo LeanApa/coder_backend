@@ -44,7 +44,9 @@ export const getProductById = async (req, res) => {
 
 export const addProduct = async (req, res) => {
   try {
-    const owner = req.user.email;
+    //console.log("El req user en add es: ", req.user);
+    const owner = req.user.user.rol !== 'premium' ? 'admin'  : req.user.user.email;
+    console.log("El owner en add es: ", owner);
     const {
       title,
       description,

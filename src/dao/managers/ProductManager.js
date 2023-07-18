@@ -13,7 +13,7 @@ export default class ProductManager {
     stock,
     category,
     thumbnails,
-    owner = "admin"
+    owner
   ) => {
     try {
       const nuevoProducto = {
@@ -27,6 +27,7 @@ export default class ProductManager {
         thumbnails,
         owner
       };
+      
       const existeProducto = await productModel.findOne({
         code: nuevoProducto.code,
       });
@@ -59,13 +60,16 @@ export default class ProductManager {
             stock,
             category,
             thumbnails,
+            owner
           }),
           message: "Error trying to create a product",
           code: EErrors.PRODUCT_CREATION_ERROR,
         });
         return "Error: Faltan ingresar datos del producto";
       } else {
+        console.log("ESTE ES EL NUEVO PRODUCTO: ", nuevoProducto)
         await productModel.create(nuevoProducto);
+        
         return { message: "Producto aniadido" };
       }
     } catch (error) {

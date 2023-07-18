@@ -25,6 +25,7 @@ import LoggerRouter from './routes/loggerTest.router.js';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUiExpress from 'swagger-ui-express'
 import MailRouter from './routes/mail.router.js';
+import UsersRouter from './routes/user.router.js';
 
 
 
@@ -41,6 +42,7 @@ const viewRouter = new ViewsRouter();
 const mockingRouter = new MockingRouter();
 const loggerRouter = new LoggerRouter();
 const mailRouter = new MailRouter();
+const userRouter = new UsersRouter();
 
 
 const BASE_PREFIX = "/api";
@@ -97,6 +99,7 @@ app.use(`${BASE_PREFIX}/sessions`, sessionRouter.getRouter());
 app.use('/mockingproducts', mockingRouter.getRouter());
 app.use('/loggertest', loggerRouter.getRouter());
 app.use('/mail', mailRouter.getRouter());
+app.use(`${BASE_PREFIX}/users`, userRouter.getRouter());
 
 socketServer.on('connection', (socket)=>{
     console.log("nuevo cliente conectado");
