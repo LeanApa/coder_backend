@@ -11,6 +11,6 @@ export default class ProductsRouter extends CustomRouter{
         
         this.put('/:pid',["ADMIN"], updateProduct);
         
-        this.delete('/:pid',["ADMIN"], deleteProduct);
+        this.delete('/:pid',["ADMIN", "PREMIUM"], deleteProduct);
     }
 }

@@ -112,11 +112,23 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     const { pid } = req.params;
-    const respuesta = await productService.deleteProduct(pid);
+    const {user} = req.user;
+    let respuesta = "";
+    const producto = await productService.getProductById(pid);
+    if(user.rol !== 'premium'){
+      respuesta = await productService.deleteProduct(pid);
+    }else if(producto.owner === user.email){
+      await productService.deleteProduct(pid); 
+      respuesta = "Producto eliminado";
+      res.send({message: respuesta});
+    }else{
+      respuesta = "Este producto no te pertenece";
+      res.send({message: respuesta});
+    }
     socketServer.emit("deleteProduct", () => {
-      req.logger.info("producto eliminado");
+      req.logger.info(respuesta);
     });
-    res.send(respuesta);
+    res.send({message: respuesta});
   } catch (error) {
     req.logger.error(error);
   }

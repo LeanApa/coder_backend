@@ -1,4 +1,4 @@
-import { cartService, ticketService } from "../app.js";
+import { cartService, productService, ticketService } from "../app.js";
 
 export const getCarts = async (req, res) => {
   try {
@@ -33,7 +33,14 @@ export const addCart = async (req, res) => {
 export const addProduct = async (req, res) => {
   try {
     const { cid, pid } = req.params;
-    const respuesta = await cartService.addProduct(cid, pid);
+    const { user } = req.user;
+    const producto = await productService.getProductById(pid);
+    let respuesta = "";
+    if (user.rol === "premium" && producto.owner === user.email) {
+      respuesta = "No puede agregar al carrito un producto que es suyo"
+      res.status(400).send({message: respuesta});
+    }
+    respuesta = await cartService.addProduct(cid, pid);
     res.send(respuesta);
   } catch (error) {
     req.logger.error(error);
