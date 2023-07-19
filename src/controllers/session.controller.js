@@ -19,7 +19,9 @@ export const githubcallback = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email } = req.body;
-  const user = await userModel.findOne({ email: email });
+  let user = await userModel.findOne({ email: email });
+  user.last_connection = new Date();
+  await userModel.updateOne({ email: email }, user);
   const userAgent = req.headers['user-agent'];
   if (userAgent.includes('Postman') || userAgent.includes('HTTPClient')){
     res.send({
