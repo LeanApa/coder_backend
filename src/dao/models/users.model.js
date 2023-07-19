@@ -21,7 +21,12 @@ const usersSchema = new mongoose.Schema({
         type: String,
         default:'user',
         enum: ['user', 'premium', 'admin']
-    } 
+    },
+    documents: [{
+        name: String,
+        reference: String
+    }],
+    
 })
 
 
