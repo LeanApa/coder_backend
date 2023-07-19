@@ -3,7 +3,16 @@ import { userModel } from "../dao/models/users.model.js";
 import { generateToken, passportCall } from "../utils.js";
 
 export const logout = async (req, res) => {
-  return res.clearCookie("cookieToken", { httpOnly: true }).redirect("/login");
+  try {
+    const {email} = req.user;
+    let user = await userModel.findOne({ email: email });
+    user.last_connection = new Date();
+    await userModel.updateOne({ email: email }, user); 
+    return res.clearCookie("cookieToken", { httpOnly: true }).redirect("/login");
+  } catch (error) {
+    req.logger.error(error);
+  
+  }
 };
 
 export const githubcallback = async (req, res) => {
