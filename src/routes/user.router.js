@@ -5,6 +5,7 @@ import  CustomRouter  from "./router.router.js";
 export default class UsersRouter extends CustomRouter{
     init(){
         this.get("/premium/:uid",['PUBLIC'], premiumUser);
+        this.post("/:uid/documents",['PUBLIC'], documents);
         
     }
  
