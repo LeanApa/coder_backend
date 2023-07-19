@@ -6,6 +6,7 @@ import passport from 'passport';
 import {faker} from '@faker-js/faker/locale/es';
 import winston from 'winston';
 import nodemailer from 'nodemailer';
+import multer from 'multer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -22,6 +23,29 @@ export const generateToken = (user)=>{
     return token;
 }
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        if (file.fieldname === 'profile') {
+            cb(null, __dirname + '/public/profiles');
+        } else if (file.fieldname === 'document') {
+            cb(null, __dirname + '/public/documents');
+        } else if (file.fieldname === 'product') {
+            cb(null, __dirname + '/public/products');
+        } else {
+            cb(new Error('Tipo de archivo no válido'));
+        }
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    
+    }
+});
+
+export const uploader = multer({storage}).fields([
+    { name: 'profile', maxCount: 1 },
+    { name: 'product', maxCount: 1 },
+    { name: 'document', maxCount: 1 }
+]);
 
 
 export const passportCall = (strategy) =>{

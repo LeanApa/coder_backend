@@ -16,3 +16,15 @@ export const premiumUser = async (req,res) => {
     }
    
 }
+
+export const documents = async (req,res) => {
+    try {
+        if (!req.files) {
+            res.status(400).send('Ningún archivo fue cargado');
+        }
+        res.status(200).send('Archivos cargados correctamente');
+    } catch (error) {
+        req.logger.error(error);
+    }
+
+}
