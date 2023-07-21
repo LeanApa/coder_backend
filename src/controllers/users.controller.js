@@ -26,14 +26,17 @@ export const documents = async (req,res) => {
             res.status(400).send('Ningún archivo fue cargado');
         }
         if (req.files.product) {
-            documents.push({name: req.files.product[0].filename, reference: ""});
+            documents.push({name: req.files.product[0].filename, reference: req.files.product[0].path});
         }
         if (req.files.profile) {
-
+            documents.push({name: req.files.profile[0].filename, reference: req.files.profile[0].path});
         }
         if (req.files.document) {
-
+            documents.push({name: req.files.document[0].filename, reference: req.files.document[0].path});
         }
+        user.documents.push(...documents);
+        await userModel.findByIdAndUpdate(uid,user);
+        req.logger.info('Archivos cargados correctamente', documents);
         res.status(200).send('Archivos cargados correctamente');
     } catch (error) {
         req.logger.error(error);
