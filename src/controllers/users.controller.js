@@ -1,16 +1,14 @@
 import { userModel } from "../dao/models/users.model.js"
 import { transporter } from "../utils.js";
+import { userDTO } from "../dao/DTO/user.dto.js";
 
 
 export const getUsers = async (req,res) => {
     let users = await userModel.find();
     console.log(users);
     const usersFiltered = users.map(user => {
-        return {
-            name: user.first_name,
-            email: user.email,
-            rol: user.rol
-        }
+        const userFiltered = new userDTO(user);
+        return userFiltered;
     });
     res.send(usersFiltered);
 }
