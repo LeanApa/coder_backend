@@ -1,4 +1,50 @@
 import { userModel } from "../dao/models/users.model.js"
+import { transporter } from "../utils.js";
+
+
+export const getUsers = async (req,res) => {
+    let users = await userModel.find();
+    console.log(users);
+    const usersFiltered = users.map(user => {
+        return {
+            name: user.first_name,
+            email: user.email,
+            rol: user.rol
+        }
+    });
+    res.send(usersFiltered);
+}
+
+export const deleteUsers = async (req,res) => {
+    try {
+        process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
+        let users = await userModel.find();
+        let deleteDate = new Date();
+        deleteDate.setDate(deleteDate.getDate() - (2))
+        const sendMail = users.filter(user => user.last_connection < deleteDate);
+        for (const user of sendMail) {
+            await transporter.sendMail({
+                from:'TiendaRopa <lea.apagro@gmail.com>',
+                to: user.email,
+                subject:'Cuenta eliminada',
+                html:`
+                <div>
+                    <h1>Cuenta eliminada</h1>
+                    <p>Su cuenta ha sido eliminada por inactividad de más de dos días</p>
+                </div>`,
+                attachments:[]
+            });
+        }
+        users = await userModel.deleteMany({last_connection: {$lt: deleteDate}});
+        process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "1";
+        
+        res.send({message: "Usuarios borrados: ", users});
+    } catch (error) {
+        req.logger.error(error);
+    }
+
+}
+
 
 export const premiumUser = async (req,res) => {
     try {

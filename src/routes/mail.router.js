@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken";
 export default class MailRouter extends CustomRouter{
     
     init(){
+        
+        
 
         this.post('/reset',["PUBLIC"],async (req,res)=>{
             try {
@@ -14,7 +16,7 @@ export default class MailRouter extends CustomRouter{
                 const token = jwt.sign({}, 'secreto', { expiresIn: 60*60 });
                 const {toMail} = req.body;
                 const link = `http://localhost:8080/verify?token=${token}&tomail=${toMail}`;
-                let result = await transporter.sendMail({
+                await transporter.sendMail({
                     from:'TiendaRopa <lea.apagro@gmail.com>',
                     to: toMail,
                     subject:'Reseteo de contraseña',
@@ -32,6 +34,7 @@ export default class MailRouter extends CustomRouter{
                 console.log(error);
             }
         });
+
     }
     
 }
