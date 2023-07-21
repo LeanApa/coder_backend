@@ -19,8 +19,20 @@ export const premiumUser = async (req,res) => {
 
 export const documents = async (req,res) => {
     try {
+        const {uid} = req.params;
+        const user = await userModel.findById(uid);
+        let documents = [];
         if (!req.files) {
             res.status(400).send('Ningún archivo fue cargado');
+        }
+        if (req.files.product) {
+            documents.push({name: req.files.product[0].filename, reference: ""});
+        }
+        if (req.files.profile) {
+
+        }
+        if (req.files.document) {
+
         }
         res.status(200).send('Archivos cargados correctamente');
     } catch (error) {
