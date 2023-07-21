@@ -6,10 +6,10 @@ import  CustomRouter  from "./router.router.js";
 export default class UsersRouter extends CustomRouter{
     init(){
         this.get('/',["PUBLIC"], getUsers)
-        this.delete("/",['PUBLIC'], deleteUsers);
+        this.delete("/",['ADMIN'], deleteUsers);
         this.get("/premium/:uid",['PUBLIC'], premiumUser);
         this.post("/:uid/documents",['PUBLIC'], uploader, documents);
-        this.delete("/:uid",['PUBLIC'], deleteUser);
+        this.delete("/:uid",['ADMIN'], deleteUser);
         
     }
  
