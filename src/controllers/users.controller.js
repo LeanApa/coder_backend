@@ -3,11 +3,16 @@ import { userModel } from "../dao/models/users.model.js"
 export const premiumUser = async (req,res) => {
     try {
         const {uid} = req.params
+        const requiredDocuments = ["Identificacion","Comprobante de domicilio","Comprobante de estado de cuenta"]
+        let premiumReady = false; 
         let usuarioEncontrado = await userModel.findById(uid);
+
         if(usuarioEncontrado.rol === "premium"){
            usuarioEncontrado.rol = "user";
         }else{
-            usuarioEncontrado.rol = "premium";
+            const documentsNames = usuarioEncontrado.documents.map(document => document.name);
+            premiumReady = requiredDocuments.every(document => documentsNames.includes(document));
+            premiumReady ? usuarioEncontrado.rol = "premium" : res.status(400).send({message: "Faltan documentos por subir"});
         }
         await userModel.findByIdAndUpdate(uid,usuarioEncontrado);
         res.send(usuarioEncontrado);
