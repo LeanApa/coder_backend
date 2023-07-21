@@ -1,0 +1,34 @@
+
+<h1>Bienvenido {{userAdmin.first_name}} {{user.last_name}}!</h1>
+<h2>Su rol es: {{userAdmin.rol}}</h2>
+<p>Su email es: {{userAdmin.email}}</p>   
+<p>Su edad es: {{userAdmin.age}}</p>
+
+
+ 
+  <div>
+    <form action="/api/sessions/logout" method="get">
+      <br />
+      <button type="submit">logout</button>
+    </form>
+  </div>
+
+<h2>Listado de usuarios</h2>
+<div class="row">
+{{#each users}}
+    <div class="card col-3 m-1" style="width: 18rem;">
+        <img src="..." class="card-img-top" alt={{this.thumbnails}}>
+        <div class="card-body">
+            <h5 class="card-title">Nombre: {{this.first_name}}</h5>
+            <p class="card-text">Apellido: {{this.last_name}}</p>
+            <p class="card-text">Email: {{this.email}}</p>
+            <p class="card-text">Edad: {{this.age}}</p>
+            <p class="card-text">Rol: {{this.rol}}</p>
+            <p class="card-text">Ultima conexion: {{this.last_connection}}</p>
+            <button type="button" id="cambiar" class="btn btn-primary" onClick="cambiarRol('{{this._id}}')">Cambiar rol</button>
+            <button type="button" id="eliminar" class="btn btn-primary AgregarCarrito m-2" onClick="eliminarUsuario('{{this._id}}')">Eliminar usuario</button>
+        </div>
+    </div>
+{{/each}}
+</div>
+<script src="/js/userAdmin.js"></script>

@@ -117,3 +117,21 @@ export const passwordReset = async (req, res) => {
     console.log(error);
   }
 };
+export const usersAdmin = async (req, res) => {
+  const usersList = await userModel.find();
+  const usersFiltered = usersList.filter((user) => user.rol !== "admin");
+  const userAdmin = req.user.user;
+  console.log("USUARIO ADMINISTRADOR",userAdmin);
+  const users = usersFiltered.map((user) => {
+    return {
+      _id: user._id,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      age: user.age,
+      rol: user.rol,
+      last_connection: user.last_connection
+    };
+  });
+  res.render("userAdmin", { users, userAdmin });
+}

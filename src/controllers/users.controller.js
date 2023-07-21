@@ -92,5 +92,13 @@ export const documents = async (req,res) => {
     } catch (error) {
         req.logger.error(error);
     }
-
+}
+export const deleteUser = async (req,res) => {
+    const {uid} = req.params;
+    try {
+        const user = await userModel.findByIdAndDelete(uid);
+        res.send({message: "Usuario eliminado: ",user});
+    } catch (error) {
+        req.logger.error(error);
+    }
 }
