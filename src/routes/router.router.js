@@ -76,7 +76,8 @@ export default class CustomRouter{
             if(!policies.includes(user.user.rol.toUpperCase())) return res.status(403).send({status:"error",error:"Forbidden"});
         }else{
             const authHeaders = req.headers.cookie;
-            req.logger.info(`Este es TOKEN QUE ROMPE prod:  ${authHeaders}`);
+            const {cookieToken} = req.headers.cookie;
+            req.logger.info(`Este es TOKEN QUE ROMPE prod:  ${cookieToken}`);
             if(!req.user) return res.status(401).send({status:"error",error:"Unauthorized"});
             const header = authHeaders.split("=")[1];
             const token = header.split(";")[0];
