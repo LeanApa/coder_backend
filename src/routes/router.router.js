@@ -77,11 +77,18 @@ export default class CustomRouter{
         }else{
             const authHeaders = req.headers.cookie;
             if(!req.user) return res.status(401).send({status:"error",error:"Unauthorized"});
-            const header = authHeaders.split(";")[10];
+            const header = authHeaders.split(";");
             req.logger.info(`Este es TOKEN QUE ROMPE prod:  ${header}`);
-            const token = header.split("=")[1];
+            const tokenPair = header.find((pair) => pair.includes("cookieToken="));
+            let cookieToken = null;
             //req.logger.info(`Este es TOKEN QUE ROMPE prod:  ${token}`);
-            user = jwt.verify(token,'s3cr3tPassw0rd');
+            if (tokenPair) {
+                // Si se encuentra el par que contiene "cookieToken", extraer el valor
+                const startIndex = tokenPair.indexOf("cookieToken=") + "cookieToken=".length;
+                cookieToken = tokenPair.slice(startIndex);
+              }
+              req.logger.info(`Este NUEVO TOKEN prod:  ${header}`);
+            user = jwt.verify(cookieToken,'s3cr3tPassw0rd');
             req.logger.debug(`Este es el user:  ${user}`);
             if(!policies.includes(user.user.rol.toUpperCase())) return res.status(403).send({status:"error",error:"Forbidden"});
         }
