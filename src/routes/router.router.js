@@ -87,7 +87,7 @@ export default class CustomRouter{
                 const startIndex = tokenPair.indexOf("cookieToken=") + "cookieToken=".length;
                 cookieToken = tokenPair.slice(startIndex);
               }
-              req.logger.info(`Este NUEVO TOKEN prod:  ${header}`);
+              req.logger.info(`Este NUEVO TOKEN prod:  ${cookieToken}`);
             user = jwt.verify(cookieToken,'s3cr3tPassw0rd');
             req.logger.debug(`Este es el user:  ${user}`);
             if(!policies.includes(user.user.rol.toUpperCase())) return res.status(403).send({status:"error",error:"Forbidden"});
