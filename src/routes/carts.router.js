@@ -13,7 +13,7 @@ export default class CartsRouter extends CustomRouter{
         
         this.post('/:cid/products/:pid', ["USER","PREMIUM"], addProduct);
         
-        this.delete('/:cid/products/:pid',["PUBLIC"], deleteProductByProductId);
+        this.delete('/:cid/products/:pid',["USER", "PREMIUM"], deleteProductByProductId);
         
         this.put('/:cid',["PUBLIC"], updateProductsByCartId)
         

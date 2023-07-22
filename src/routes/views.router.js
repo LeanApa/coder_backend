@@ -1,7 +1,7 @@
 import authMdw from "../middleware/auth.js";
 import  CustomRouter  from "./router.router.js";
 import { passportCall } from "../utils.js";
-import { login, usersAdmin, realtimeproducts, getAllMessages, getProducts, getProductsByCartId, loginRender, register, verify, passwordReset } from "../controllers/views.controller.js";
+import { login, ticket, usersAdmin, realtimeproducts, getAllMessages, getProducts, getProductsByCartId, loginRender, register, verify, passwordReset } from "../controllers/views.controller.js";
 
 export default class ViewsRouter extends CustomRouter{
 
@@ -14,7 +14,7 @@ export default class ViewsRouter extends CustomRouter{
         
         this.get('/products',["PUBLIC"],passportCall('jwt'), getProducts);
         
-        this.get('/carts/:cid',["PUBLIC"], getProductsByCartId);       
+        this.get('/carts/:cid',["PUBLIC"],passportCall('jwt'), getProductsByCartId);       
         
         this.get("/login",["PUBLIC"], loginRender);
         
@@ -24,7 +24,9 @@ export default class ViewsRouter extends CustomRouter{
 
         this.post("/passwordreset", ["PUBLIC"], passwordReset);
 
-        this.get("/users", ["ADMIN"], usersAdmin)
+        this.get("/users", ["ADMIN"], usersAdmin);
+
+        this.get("/tickets/:tid", ["USER","PREMIUM"], ticket);
 
     }
 }

@@ -101,12 +101,18 @@ export const purchaseProducts = async (req, res) => {
   try {
     const { cid } = req.params;
     const { email } = req.user.user;
+    const userAgent = req.headers['user-agent'];
     req.logger.debug("El email es: ", email);
     const { productosNoComprados, amount } = await cartService.purchaseProducts(
       cid
     );
     const ticket = await ticketService.createTicket(amount, email);
-    res.send({ ProductosNoComprados: productosNoComprados, tiket: ticket });
+    if (userAgent.includes('Postman') || userAgent.includes('HTTPClient')){
+      res.send({ ProductosNoComprados: productosNoComprados, tiket: ticket });
+    }else{
+      res.redirect(`/tickets/${ticket._id}`);
+    }
+    
   } catch (error) {
     req.logger.error(error);
   }

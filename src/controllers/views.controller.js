@@ -2,6 +2,7 @@ import { cartService, messagesService, productService } from "../app.js";
 import { userModel } from "../dao/models/users.model.js";
 import jwt from "jsonwebtoken";
 import { isValidPassword, createHash } from "../utils.js";
+import { ticketModel } from "../dao/models/tickets.model.js";
 
 export const login = async (req, res) => {
   return res.redirect("/login");
@@ -78,8 +79,10 @@ export const getProducts = async (req, res) => {
 
 export const getProductsByCartId = async (req, res) => {
   const { cid } = req.params;
+  const {user} = req.user;
+  console.log("ACA ESTA EL USUARIO", user);
   const products = await cartService.getProductsByCartId(cid);
-  res.render("cart", { products });
+  res.render("cart", { products, user });
 };
 
 export const loginRender = async (req, res) => {
@@ -134,4 +137,10 @@ export const usersAdmin = async (req, res) => {
     };
   });
   res.render("userAdmin", { users, userAdmin });
+}
+
+export const ticket = async (req, res) => {
+  const { tid } = req.params;
+  const ticket = await ticketModel.findById(tid).lean();
+  res.render("ticket", { ticket });
 }
