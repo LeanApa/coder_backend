@@ -15,7 +15,7 @@ export default class MailRouter extends CustomRouter{
 
                 const token = jwt.sign({}, 'secreto', { expiresIn: 60*60 });
                 const {toMail} = req.body;
-                const link = `http://localhost:8080/verify?token=${token}&tomail=${toMail}`;
+                const link = `https://coderbackend-production-ce8b.up.railway.app/verify?token=${token}&tomail=${toMail}`;
                 await transporter.sendMail({
                     from:'TiendaRopa <lea.apagro@gmail.com>',
                     to: toMail,

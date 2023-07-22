@@ -20,10 +20,10 @@ export const getProducts = async (req, res) => {
 
     const { hasNextPage, hasPrevPage, nextPage } = products;
     const nextLink = hasNextPage
-      ? `http://localhost:8080/api/products/?page=${nextPage}`
+      ? `https://coderbackend-production-ce8b.up.railway.app/api/products/?page=${nextPage}`
       : null;
     const prevLink = hasPrevPage
-      ? `http://localhost:8080/api/products/?page=${products.page - 1}`
+      ? `https://coderbackend-production-ce8b.up.railway.app/api/products/?page=${products.page - 1}`
       : null;
 
     res.send({ status: "success", payload: products, prevLink, nextLink });

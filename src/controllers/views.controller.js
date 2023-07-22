@@ -23,10 +23,10 @@ export const realtimeproducts = async (req, res) => {
   );
   const { hasNextPage, hasPrevPage, nextPage } = products;
   const nextLink = hasNextPage
-    ? `http://localhost:8080/products/?page=${nextPage}`
+    ? `https://coderbackend-production-ce8b.up.railway.app/products/?page=${nextPage}`
     : null;
   const prevLink = hasPrevPage
-    ? `http://localhost:8080/products/?page=${products.page - 1}`
+    ? `https://coderbackend-production-ce8b.up.railway.app/products/?page=${products.page - 1}`
     : null;
   res.render("realTimeProducts", { products, nextLink, prevLink });
 };
@@ -65,10 +65,10 @@ export const getProducts = async (req, res) => {
     );
     const { hasNextPage, hasPrevPage, nextPage } = products;
     const nextLink = hasNextPage
-      ? `http://localhost:8080/products/?page=${nextPage}`
+      ? `https://coderbackend-production-ce8b.up.railway.app/products/?page=${nextPage}`
       : null;
     const prevLink = hasPrevPage
-      ? `http://localhost:8080/products/?page=${products.page - 1}`
+      ? `https://coderbackend-production-ce8b.up.railway.app/products/?page=${products.page - 1}`
       : null;
 
     res.render("products", { products, nextLink, prevLink, user });
