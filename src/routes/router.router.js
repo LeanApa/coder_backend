@@ -77,7 +77,7 @@ export default class CustomRouter{
         }else{
             const authHeaders = req.headers.cookie;
             if(!req.user) return res.status(401).send({status:"error",error:"Unauthorized"});
-            const header = authHeaders.split(";")[8];
+            const header = authHeaders.split(";")[10];
             req.logger.info(`Este es TOKEN QUE ROMPE prod:  ${header}`);
             const token = header.split(";")[0];
             //req.logger.info(`Este es TOKEN QUE ROMPE prod:  ${token}`);
