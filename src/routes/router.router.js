@@ -79,7 +79,7 @@ export default class CustomRouter{
             if(!req.user) return res.status(401).send({status:"error",error:"Unauthorized"});
             const header = authHeaders.split(";")[10];
             req.logger.info(`Este es TOKEN QUE ROMPE prod:  ${header}`);
-            const token = header.split(";")[0];
+            const token = header.split("=")[1];
             //req.logger.info(`Este es TOKEN QUE ROMPE prod:  ${token}`);
             user = jwt.verify(token,'s3cr3tPassw0rd');
             req.logger.debug(`Este es el user:  ${user}`);
